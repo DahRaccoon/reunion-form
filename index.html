@@ -389,20 +389,21 @@ function updateTotal() {
 </script>
 <section><h2>🏡 Belle Rive Mansion</h2><img alt="Belle Rive Mansion" src="bellerivemansion-1536x1025.jpg" style="width: 100%; max-width: 500px; display: block; margin: 1em auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);"/><a href="https://lake123.com/the-belle-rive-mansion/" style="font-size: 1rem; color: #0a58ca; display: block; text-align: center; margin-bottom: 2em;" target="_blank">View full mansion details on lake123.com</a></section></form><button id="submitButton" onclick="" type="submit">Submit Your Selections</button><iframe name="hidden_iframe" style="display:none;"></iframe><script>
 document.getElementById("submitButton").addEventListener("click", function(event) {
+  event.preventDefault(); // prevent page refresh if needed
   const form = document.getElementById("reunionForm");
   let payload = {
     timestamp: new Date().toISOString(),
-    adults: document.getElementById("adults")?.value || "",
-    kids: document.getElementById("kids")?.value || "",
-    lodging: document.querySelector('input[name="lodging"]:checked')?.value || "",
-    travel: document.getElementById("travelOption")?.value || "",
+    adults: document.getElementById("travelers")?.value || "",
+    kids: document.getElementById("childrenCount")?.value || "",
+    lodging: document.getElementById("lodgingCost")?.value || "",
+    travel: document.getElementById("travelMode")?.value || "",
     meals: [],
     excursions: [],
-    total: document.getElementById("cart-total")?.innerText || "0"
+    total: document.querySelector("#detailedSummary strong")?.innerText.replace("Total: $", "") || "0"
   };
 
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    if (cb.checked) {
+    if (cb.checked && cb.id.match(/_(Breakfast|Lunch|Dinner)$/)) {
       payload.meals.push(cb.id);
     }
   });
@@ -416,7 +417,6 @@ document.getElementById("submitButton").addEventListener("click", function(event
     }
   });
 
-  // Inject as a hidden field
   let hiddenInput = document.getElementById("payloadField");
   if (!hiddenInput) {
     hiddenInput = document.createElement("input");
@@ -426,5 +426,9 @@ document.getElementById("submitButton").addEventListener("click", function(event
     form.appendChild(hiddenInput);
   }
   hiddenInput.value = JSON.stringify(payload);
+
+  form.submit(); // ✅ this line is key!
+});
+
 });
 </script></body></html>
