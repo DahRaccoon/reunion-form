@@ -425,6 +425,6 @@ document.getElementById("submitButton").addEventListener("click", function(event
     hiddenInput.id = "payloadField";
     form.appendChild(hiddenInput);
   }
-  hiddenInput.value = JSON.stringify(payload);
+  hiddenInput.value = encodeURIComponent(JSON.stringify(payload));
 });
 </script></body></html>
