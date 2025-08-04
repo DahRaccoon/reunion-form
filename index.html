@@ -387,44 +387,51 @@ function updateTotal() {
   if (summaryBox) summaryBox.innerHTML = receipt;
 }
 </script>
-<section><h2>🏡 Belle Rive Mansion</h2><img alt="Belle Rive Mansion" src="bellerivemansion-1536x1025.jpg" style="width: 100%; max-width: 500px; display: block; margin: 1em auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);"/><a href="https://lake123.com/the-belle-rive-mansion/" style="font-size: 1rem; color: #0a58ca; display: block; text-align: center; margin-bottom: 2em;" target="_blank">View full mansion details on lake123.com</a></section></form><button id="submitButton" onclick="" type="submit">Submit Your Selections</button><iframe name="hidden_iframe" style="display:none;"></iframe><script>
-document.getElementById("submitButton").addEventListener("click", function(event) {
-  const form = document.getElementById("reunionForm");
-  let payload = {
-    timestamp: new Date().toISOString(),
-    adults: document.getElementById("adults")?.value || "",
-    kids: document.getElementById("kids")?.value || "",
-    lodging: document.querySelector('input[name="lodging"]:checked')?.value || "",
-    travel: document.getElementById("travelOption")?.value || "",
-    meals: [],
-    excursions: [],
-    total: document.getElementById("cart-total")?.innerText || "0"
-  };
+<section><h2>🏡 Belle Rive Mansion</h2><img alt="Belle Rive Mansion" src="bellerivemansion-1536x1025.jpg" style="width: 100%; max-width: 500px; display: block; margin: 1em auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);"/><a href="https://lake123.com/the-belle-rive-mansion/" style="font-size: 1rem; color: #0a58ca; display: block; text-align: center; margin-bottom: 2em;" target="_blank">View full mansion details on lake123.com</a></section></form><  <input type="hidden" name="json" id="payloadField" />
 
-  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    if (cb.checked) {
-      payload.meals.push(cb.id);
-    }
+  <div style="text-align:center; margin-top: 2em;">
+    <button type="submit" id="submitButton">Submit Your Selections</button>
+  </div>
+</form>
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+<script>
+<script>
+  document.getElementById("reunionForm").addEventListener("submit", function(event) {
+    const form = document.getElementById("reunionForm");
+
+    const payload = {
+      familyName: document.getElementById("familyName")?.value || "",
+      adults: document.getElementById("travelers")?.value || "0",
+      kids: document.getElementById("childrenCount")?.value || "0",
+      lodging: document.getElementById("lodgingCost")?.value || "",
+      extraBed: document.getElementById("extraBed")?.checked || false,
+      travelMode: document.getElementById("travelMode")?.value || "",
+      origin: document.getElementById("travelOrigin")?.value || "",
+      airport: document.getElementById("arrivalAirport")?.value || "",
+      meals: [],
+      excursions: [],
+      totalCost: document.getElementById("detailedSummary")?.innerText || "0"
+    };
+
+    // collect meals
+    document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+      if (cb.id.startsWith("Day_")) payload.meals.push(cb.id);
+    });
+
+    // collect excursions
+    document.querySelectorAll('.activity').forEach(div => {
+      const label = div.querySelector("label")?.innerText || "";
+      const adults = div.querySelector("input[id*='Adults']")?.value || "0";
+      const kids = div.querySelector("input[id*='Kids']")?.value || "0";
+      if (adults !== "0" || kids !== "0") {
+        payload.excursions.push({ label, adults, kids });
+      }
+    });
+
+    // encode and attach to hidden input
+    document.getElementById("payloadField").value = encodeURIComponent(JSON.stringify(payload));
   });
+</script>
 
-  document.querySelectorAll('.activity').forEach(div => {
-    const label = div.querySelector("label")?.innerText || "";
-    const adults = div.querySelector("input[id*='Adults']")?.value || "0";
-    const kids = div.querySelector("input[id*='Kids']")?.value || "0";
-    if (adults !== "0" || kids !== "0") {
-      payload.excursions.push({ label, adults, kids });
-    }
-  });
-
-  // Inject as a hidden field
-  let hiddenInput = document.getElementById("payloadField");
-  if (!hiddenInput) {
-    hiddenInput = document.createElement("input");
-    hiddenInput.type = "hidden";
-    hiddenInput.name = "json";
-    hiddenInput.id = "payloadField";
-    form.appendChild(hiddenInput);
-  }
-  hiddenInput.value = encodeURIComponent(JSON.stringify(payload));
-});
 </script></body></html>
