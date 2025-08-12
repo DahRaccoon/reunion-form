@@ -173,8 +173,8 @@
 
                     <!-- Meal Planning -->
                     <section>
-                        <h2 class="text-2xl font-bold text-gray-900 mb-4">🍽️ Meal Planning (per person)</h2>
-                        <p class="text-gray-600 mb-4">Please indicate which meals your family will participate in.</p>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">🍽️ Meal Planning</h2>
+                        <p class="text-gray-600 mb-4">Select the meals your family will attend. The cost is calculated based on a base rate of $8 per meal for each adult, and $4 per meal for each child in your family.</p>
                         <div id="meals-list" class="space-y-4">
                             <!-- Meals will be dynamically populated here -->
                         </div>
@@ -266,180 +266,71 @@
             };
 
             const excursions = [
-                {
-                    id: "silverDollarCity",
-                    name: "Silver Dollar City",
-                    description: "An 1880s-style theme park with thrilling coasters and live entertainment.",
-                    adultPrice: 89,
-                    childPrice: 79,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/2d6a4f/ffffff?text=Silver+Dollar+City"
-                },
-                {
-                    id: "bransonMountainCoaster",
-                    name: "Branson Mountain Coaster",
-                    description: "Race through the Ozark hills on a self-controlled alpine coaster.",
-                    adultPrice: 20,
-                    childPrice: 20,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/3c8d5f/ffffff?text=Branson+Mountain+Coaster"
-                },
-                {
-                    id: "wolfeMountainZipline",
-                    name: "Wolfe Mountain Zipline",
-                    description: "Soar through tree canopies on scenic ziplines and explore the Snowflex tubing hill.",
-                    adultPrice: 130,
-                    childPrice: 130,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/5a9c78/ffffff?text=Wolfe+Mountain+Zipline"
-                },
-                {
-                    id: "fritzsAdventure",
-                    name: "Fritz’s Adventure",
-                    description: "Indoor adventure park with ropes courses, tunnels, and climbing walls.",
-                    adultPrice: 35,
-                    childPrice: 35,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/78c092/ffffff?text=Fritz's+Adventure"
-                },
-                {
-                    id: "shepherdHillsAdventurePark",
-                    name: "Shepherd of the Hills Adventure Park",
-                    description: "Classic Branson destination offering ziplines, ropes courses, and a historic outdoor drama.",
-                    adultPrice: 30,
-                    childPrice: 30,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/94d2bd/ffffff?text=Shepherd+of+the+Hills"
-                },
-                {
-                    id: "bigfootFunPark",
-                    name: "Bigfoot Fun Park",
-                    description: "Family fun with thrill rides, arcade games, and themed Bigfoot attractions.",
-                    adultPrice: 25,
-                    childPrice: 25,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/51a3a3/ffffff?text=Bigfoot+Fun+Park"
-                },
-                {
-                    id: "xtremeRacingCenter",
-                    name: "Xtreme Racing Center",
-                    description: "Go full throttle on high-speed go-karts built for racing.",
-                    adultPrice: 40,
-                    childPrice: 40,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/3d7d7d/ffffff?text=Xtreme+Racing+Center"
-                },
-                {
-                    id: "marinaBoatRental",
-                    name: "Marina Boat Rental",
-                    description: "Rent a pontoon or ski boat for a day on Table Rock Lake.",
-                    adultPrice: 150,
-                    childPrice: 150,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/1e88e5/ffffff?text=Marina+Boat+Rental"
-                },
-                {
-                    id: "aquariumAtTheBoardwalk",
-                    name: "Aquarium at the Boardwalk",
-                    description: "Explore the underwater world with thousands of sea creatures and interactive exhibits.",
-                    adultPrice: 35,
-                    childPrice: 25,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/0288d1/ffffff?text=Aquarium+at+the+Boardwalk"
-                },
-                {
-                    id: "titanicMuseum",
-                    name: "Titanic Museum",
-                    description: "A two-story museum shaped like the Titanic, featuring over 400 artifacts.",
-                    adultPrice: 38,
-                    childPrice: 15,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/333333/ffffff?text=Titanic+Museum"
-                },
-                {
-                    id: "ripleysBelieveItOrNot",
-                    name: "Ripley's Believe It or Not",
-                    description: "An odditorium full of peculiar artifacts and exhibits from around the world.",
-                    adultPrice: 28,
-                    childPrice: 18,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/990000/ffffff?text=Ripley's"
-                },
-                {
-                    id: "castlesOfBranson",
-                    name: "Castles of Branson",
-                    description: "A large adventure park with multiple attractions including laser tag and a ropes course.",
-                    adultPrice: 30,
-                    childPrice: 20,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/ff9900/ffffff?text=Castles+of+Branson"
-                },
-                {
-                    id: "beyondTheLens",
-                    name: "Beyond The Lens!",
-                    description: "A high-tech adventure with virtual reality rides and escape rooms.",
-                    adultPrice: 40,
-                    childPrice: 30,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/4CAF50/ffffff?text=Beyond+The+Lens"
-                },
-                {
-                    id: "piratesCoveAdventureGolf",
-                    name: "Pirate's Cove Adventure Golf",
-                    description: "Two 18-hole miniature golf courses with pirate-themed fun.",
-                    adultPrice: 15,
-                    childPrice: 12,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/1a73e8/ffffff?text=Pirate's+Cove"
-                },
-                {
-                    id: "whiteWaterBranson",
-                    name: "White Water",
-                    description: "A water park with slides, a wave pool, and a lazy river.",
-                    adultPrice: 45,
-                    childPrice: 35,
-                    adultCount: 0,
-                    childCount: 0,
-                    img: "https://placehold.co/400x250/00bcd4/ffffff?text=White+Water"
-                }
+                { id: "silverDollarCity", name: "Silver Dollar City", description: "A sprawling 1880s-style theme park with thrilling coasters, craft demonstrations, and live entertainment.", adultPrice: 89, childPrice: 79 },
+                { id: "bransonMountainCoaster", name: "Branson Mountain Coaster", description: "Race through the Ozark hills on a self-controlled alpine coaster with dips and turns through the woods.", adultPrice: 20, childPrice: 20 },
+                { id: "wolfeMountainZipline", name: "Wolfe Mountain Zipline", description: "Soar through tree canopies on scenic ziplines and explore the Snowflex tubing hill in all seasons.", adultPrice: 130, childPrice: 130 },
+                { id: "fritzsAdventure", name: "Fritz’s Adventure", description: "Indoor adventure park with ropes courses, underground tunnels, climbing walls, and thrilling slides.", adultPrice: 35, childPrice: 35 },
+                { id: "shepherdHillsAdventurePark", name: "Shepherd of the Hills Adventure Park", description: "Classic Branson destination offering ziplines, ropes courses, and a historic outdoor drama.", adultPrice: 30, childPrice: 30 },
+                { id: "bigfootFunPark", name: "Bigfoot Fun Park", description: "Family fun with thrill rides, arcade games, and themed Bigfoot attractions including a gravity bomb.", adultPrice: 25, childPrice: 25 },
+                { id: "xtremeRacingCenter", name: "Xtreme Racing Center", description: "Go full throttle on high-speed karts built for racing on a professionally designed outdoor track.", adultPrice: 40, childPrice: 40 },
+                { id: "dogwoodCanyonNaturePark", name: "Dogwood Canyon Nature Park", description: "Explore lush trails, waterfalls, and wildlife on foot or by tram through this 10,000-acre private preserve.", adultPrice: 20, childPrice: 12 },
+                { id: "topOfTheRockGolfCartTour", name: "Top of the Rock Golf Cart Tour", description: "Drive through stunning canyons and caves on a self-guided cart tour with panoramic Ozark views.", adultPrice: 50, childPrice: 35 },
+                { id: "tableRockLakeBoating", name: "Table Rock Lake & Boating", description: "Enjoy a relaxing day swimming, fishing, or boating on the crystal-clear waters of Table Rock Lake.", adultPrice: 10, childPrice: 10 },
+                { id: "ozarkMountainBiking", name: "Ozark Mountain Biking", description: "Tackle scenic mountain trails suited for all skill levels with bike rentals available on-site.", adultPrice: 20, childPrice: 20 },
+                { id: "shepherdHillsPettingZoo", name: "Shepherd of the Hills Petting Zoo", description: "Feed goats, llamas, and other animals at this charming farm-themed experience for all ages.", adultPrice: 10, childPrice: 10 },
+                { id: "henningConservationArea", name: "Henning Conservation Area", description: "Free scenic hiking trails through wooded Ozark hills and a historic fire tower overlook.", adultPrice: 0, childPrice: 0 },
+                { id: "lakesideForestWildernessArea", name: "Lakeside Forest Wilderness Area", description: "Nature preserve with waterfalls, stone steps, and panoramic views of Lake Taneycomo.", adultPrice: 0, childPrice: 0 },
+                { id: "bigCedarLodgeGolf", name: "Big Cedar Lodge Golf", description: "Play on world-class courses like Payne’s Valley, with breathtaking views and professional-grade design.", adultPrice: 300, childPrice: 300 },
+                { id: "miniGolf", name: "Mini Golf", description: "Enjoy light-hearted competition at whimsical mini golf courses located across Branson.", adultPrice: 15, childPrice: 15 },
+                { id: "bransonTracksArcade", name: "Branson Tracks & Arcade", description: "Fast-paced go-kart tracks, classic arcade games, and mini thrill rides for all ages.", adultPrice: 15, childPrice: 15 },
+                { id: "familyBowlingNight", name: "Family Bowling Night", description: "Unwind with a family-friendly night at one of Branson’s retro or modern bowling alleys.", adultPrice: 25, childPrice: 25 },
+                { id: "dollyPartonStampede", name: "Dolly Parton’s Stampede", description: "A four-course dinner and action-packed show with horseback stunts, music, and patriotic flair.", adultPrice: 65, childPrice: 35 },
+                { id: "sightSoundTheatre", name: "Sight & Sound Theatre", description: "Epic Bible stories brought to life with Broadway-quality acting, animals, and massive sets.", adultPrice: 80, childPrice: 35 },
+                { id: "showboatBransonBelle", name: "Showboat Branson Belle", description: "Cruise Table Rock Lake with a three-course dinner and live music, comedy, and variety shows.", adultPrice: 70, childPrice: 40 },
+                { id: "imaxEntertainmentComplex", name: "IMAX Entertainment Complex", description: "Catch Hollywood films and live performances on one of the largest IMAX screens in the Midwest.", adultPrice: 20, childPrice: 20 },
+                { id: "rezaEdgeOfIllusion", name: "Reza: Edge of Illusion", description: "Mind-blowing magic and illusion in one of Branson’s most popular modern shows.", adultPrice: 45, childPrice: 25 },
+                { id: "clayCooperCountryExpress", name: "Clay Cooper’s Country Express", description: "High-energy country, rock and comedy from Branson's hometown entertainer.", adultPrice: 40, childPrice: 20 },
+                { id: "presleysCountryJubilee", name: "The Presley’s Country Jubilee", description: "Classic Ozarks comedy and country music performed by Branson’s first family of entertainment.", adultPrice: 42, childPrice: 20 },
+                { id: "hughesMusicShow", name: "The Hughes Music Show", description: "Big family production with music, dance, and light effects — performed by the Hughes Brothers.", adultPrice: 38, childPrice: 18 },
+                { id: "texasTenors", name: "The Texas Tenors", description: "America’s Got Talent favorites blend country, classical, and pop in a polished vocal performance.", adultPrice: 50, childPrice: 25 },
+                { id: "theHaygoods", name: "The Haygoods", description: "High-energy music show featuring sibling performers, pyrotechnics, and modern harmonies.", adultPrice: 47, childPrice: 25 },
+                { id: "theDuttons", name: "The Duttons", description: "Family of musicians performing country, bluegrass, and pop hits.", adultPrice: 43, childPrice: 22 },
+                { id: "wonderWorks", name: "WonderWorks", description: "An upside-down science museum with over 100 hands-on exhibits, laser tag, and rope courses.", adultPrice: 35, childPrice: 20 },
+                { id: "aquariumAtTheBoardwalk", name: "Aquarium at the Boardwalk", description: "Dive into ocean life with touch tanks, a jellyfish room, and a 5D submarine ride.", adultPrice: 30, childPrice: 15 },
+                { id: "titanicMuseum", name: "Titanic Museum", description: "Experience the tragedy and triumph of the Titanic through artifacts, replicas, and guided tours.", adultPrice: 35, childPrice: 20 },
+                { id: "butterflyPalace", name: "Butterfly Palace", description: "Stroll through a lush tropical garden filled with thousands of free-flying butterflies.", adultPrice: 25, childPrice: 15 },
+                { id: "ripleysBelieveItOrNot", name: "Ripley’s Believe It or Not!", description: "Weird, wacky, and unbelievable — explore oddities from around the globe in themed galleries.", adultPrice: 25, childPrice: 15 },
+                { id: "retroArcadeNight", name: "Retro Arcade Night", description: "Step into the '80s with classic arcade cabinets and unlimited play passes.", adultPrice: 20, childPrice: 20 },
+                { id: "hollywoodWaxMuseum", name: "Hollywood Wax Museum", description: "Pose with realistic wax figures of your favorite celebrities and pop culture icons.", adultPrice: 30, childPrice: 18 },
+                { id: "beyondTheLens", name: "Beyond the Lens!", description: "Explore interactive exhibits on pop culture, conspiracy theories, and tech-infused games.", adultPrice: 32, childPrice: 20 },
+                { id: "bransonDinosaurMuseum", name: "Branson Dinosaur Museum", description: "Walk among life-sized dinosaur replicas and learn about prehistoric life.", adultPrice: 15, childPrice: 10 },
+                { id: "worldsLargestToyMuseum", name: "World's Largest Toy Museum", description: "Over a million toys from every generation in this massive nostalgic collection.", adultPrice: 24, childPrice: 16 },
+                { id: "jetSkiRentals", name: "Jet Ski Rentals", description: "Ride the waves on Table Rock Lake with fast and fun Jet Ski rentals by the hour.", adultPrice: 100, childPrice: 100 },
+                { id: "boatAndTubes", name: "Boat and Tubes", description: "Rent a pontoon or ski boat for tubing, cruising, or relaxing with the whole crew.", adultPrice: 125, childPrice: 125 }
             ];
 
             const meals = [
-                { id: 'Sunday_Breakfast', name: 'Sunday - Breakfast', price: 12 },
-                { id: 'Sunday_Lunch', name: 'Sunday - Lunch', price: 15 },
-                { id: 'Sunday_Dinner', name: 'Sunday - Dinner: BBQ Night', price: 25 },
-                { id: 'Monday_Breakfast', name: 'Monday - Breakfast', price: 12 },
-                { id: 'Monday_Lunch', name: 'Monday - Lunch', price: 15 },
-                { id: 'Monday_Dinner', name: 'Monday - Dinner: Taco Bar', price: 20 },
-                { id: 'Tuesday_Breakfast', name: 'Tuesday - Breakfast', price: 12 },
-                { id: 'Tuesday_Lunch', name: 'Tuesday - Lunch', price: 15 },
-                { id: 'Tuesday_Dinner', name: 'Tuesday - Dinner: Burgers & Brats', price: 20 },
-                { id: 'Wednesday_Breakfast', name: 'Wednesday - Breakfast', price: 12 },
-                { id: 'Wednesday_Lunch', name: 'Wednesday - Lunch', price: 15 },
-                { id: 'Wednesday_Dinner', name: 'Wednesday - Dinner: Pasta Night', price: 20 },
-                { id: 'Thursday_Breakfast', name: 'Thursday - Breakfast', price: 12 },
-                { id: 'Thursday_Lunch', name: 'Thursday - Lunch', price: 15 },
-                { id: 'Thursday_Dinner', name: 'Thursday - Dinner: Pizza Night', price: 20 },
-                { id: 'Friday_Breakfast', name: 'Friday - Breakfast', price: 12 },
-                { id: 'Friday_Lunch', name: 'Friday - Lunch', price: 15 },
-                { id: 'Friday_Dinner', name: 'Friday - Dinner: Leftovers / Free Night', price: 0 },
-                { id: 'Saturday_Breakfast', name: 'Saturday - Breakfast', price: 12 },
-                { id: 'Saturday_Lunch', name: 'Saturday - Lunch', price: 15 },
-                { id: 'Saturday_Dinner', name: 'Saturday - Dinner: Sandwich Bar', price: 20 }
+                { id: 'Sunday_Breakfast', name: 'Sunday - Breakfast'},
+                { id: 'Sunday_Lunch', name: 'Sunday - Lunch'},
+                { id: 'Sunday_Dinner', name: 'Sunday - Dinner: BBQ Night'},
+                { id: 'Monday_Breakfast', name: 'Monday - Breakfast'},
+                { id: 'Monday_Lunch', name: 'Monday - Lunch'},
+                { id: 'Monday_Dinner', name: 'Monday - Dinner: Taco Bar'},
+                { id: 'Tuesday_Breakfast', name: 'Tuesday - Breakfast'},
+                { id: 'Tuesday_Lunch', name: 'Tuesday - Lunch'},
+                { id: 'Tuesday_Dinner', name: 'Tuesday - Dinner: Burgers & Brats'},
+                { id: 'Wednesday_Breakfast', name: 'Wednesday - Breakfast'},
+                { id: 'Wednesday_Lunch', name: 'Wednesday - Lunch'},
+                { id: 'Wednesday_Dinner', name: 'Wednesday - Dinner: Pasta Night'},
+                { id: 'Thursday_Breakfast', name: 'Thursday - Breakfast'},
+                { id: 'Thursday_Lunch', name: 'Thursday - Lunch'},
+                { id: 'Thursday_Dinner', name: 'Thursday - Dinner: Pizza Night'},
+                { id: 'Friday_Breakfast', name: 'Friday - Breakfast'},
+                { id: 'Friday_Lunch', name: 'Friday - Lunch'},
+                { id: 'Friday_Dinner', name: 'Friday - Dinner: Leftovers / Free Night'},
+                { id: 'Saturday_Breakfast', name: 'Saturday - Breakfast'},
+                { id: 'Saturday_Lunch', name: 'Saturday - Lunch'},
+                { id: 'Saturday_Dinner', name: 'Saturday - Dinner: Sandwich Bar'}
             ];
 
             function renderExcursions() {
@@ -458,7 +349,7 @@
                                 <span class="font-medium">Adults</span>
                                 <div class="flex items-center space-x-2">
                                     <button type="button" data-id="${excursion.id}" data-type="adult" data-action="decrement" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">-</button>
-                                    <span id="${excursion.id}-adult-count" class="font-bold text-lg w-6 text-center">${excursion.adultCount}</span>
+                                    <span id="${excursion.id}-adult-count" class="font-bold text-lg w-6 text-center">${excursion.adultCount || 0}</span>
                                     <button type="button" data-id="${excursion.id}" data-type="adult" data-action="increment" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">+</button>
                                 </div>
                             </div>
@@ -466,7 +357,7 @@
                                 <span class="font-medium">Children</span>
                                 <div class="flex items-center space-x-2">
                                     <button type="button" data-id="${excursion.id}" data-type="child" data-action="decrement" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">-</button>
-                                    <span id="${excursion.id}-child-count" class="font-bold text-lg w-6 text-center">${excursion.childCount}</span>
+                                    <span id="${excursion.id}-child-count" class="font-bold text-lg w-6 text-center">${excursion.childCount || 0}</span>
                                     <button type="button" data-id="${excursion.id}" data-type="child" data-action="increment" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">+</button>
                                 </div>
                             </div>
@@ -480,8 +371,8 @@
                 const mealHTML = `
                     ${meals.map(meal => `
                         <div class="flex items-center">
-                            <input type="checkbox" id="${meal.id}" name="${meal.id}" data-price="${meal.price}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                            <label for="${meal.id}" class="ml-2 block text-sm font-medium text-gray-700">${meal.name} ($${meal.price.toFixed(2)} per person)</label>
+                            <input type="checkbox" id="${meal.id}" name="${meal.id}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                            <label for="${meal.id}" class="ml-2 block text-sm font-medium text-gray-700">${meal.name}</label>
                         </div>
                     `).join('')}
                 `;
@@ -513,14 +404,14 @@
                 }
                 
                 let mealCost = 0;
+                const perMealRate = 8 * (adultTravelers + 0.5 * childTravelers);
                 document.querySelectorAll('#meals-list input[type="checkbox"]:checked').forEach(checkbox => {
-                    const mealPrice = parseFloat(checkbox.dataset.price);
-                    mealCost += (adultTravelers + childTravelers) * mealPrice;
+                    mealCost += perMealRate;
                 });
 
                 let excursionCost = 0;
                 excursions.forEach(excursion => {
-                    excursionCost += (excursion.adultCount * excursion.adultPrice) + (excursion.childCount * excursion.childPrice);
+                    excursionCost += ((excursion.adultCount || 0) * excursion.adultPrice) + ((excursion.childCount || 0) * excursion.childPrice);
                 });
 
                 const totalCost = lodgingCost + extraBedCost + travelCost + mealCost + excursionCost;
@@ -592,8 +483,8 @@
                     if (excursion) {
                         const countKey = type === 'adult' ? 'adultCount' : 'childCount';
                         if (action === 'increment') {
-                            excursion[countKey]++;
-                        } else if (action === 'decrement' && excursion[countKey] > 0) {
+                            excursion[countKey] = (excursion[countKey] || 0) + 1;
+                        } else if (action === 'decrement' && (excursion[countKey] || 0) > 0) {
                             excursion[countKey]--;
                         }
                         document.getElementById(`${id}-${type}-count`).textContent = excursion[countKey];
@@ -631,13 +522,13 @@
                 // Collect selected meals
                 document.querySelectorAll('#meals-list input[type="checkbox"]:checked').forEach(checkbox => {
                     const meal = meals.find(m => m.id === checkbox.id);
-                    selectedMeals.push(`${meal.name} ($${meal.price.toFixed(2)}/person)`);
+                    selectedMeals.push(meal.name);
                 });
                 
                 // Collect selected excursions
                 excursions.forEach(excursion => {
-                    if (excursion.adultCount > 0 || excursion.childCount > 0) {
-                        selectedExcursions.push(`${excursion.name} (Adults: ${excursion.adultCount}, Children: ${excursion.childCount})`);
+                    if ((excursion.adultCount || 0) > 0 || (excursion.childCount || 0) > 0) {
+                        selectedExcursions.push(`${excursion.name} (Adults: ${excursion.adultCount || 0}, Children: ${excursion.childCount || 0})`);
                     }
                 });
 
