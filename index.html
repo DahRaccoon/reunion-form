@@ -45,6 +45,78 @@
                 margin-top: 2rem;
             }
         }
+    
+        /* Styles for the confirmation page */
+        #confirmationPage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        #confirmationCard {
+            transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+        }
+
+        /* Hide number input spinners */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        
+        /* Style for the excursion categories */
+        .excursion-category {
+            margin-bottom: 2rem;
+        }
+
+        /* Input with buttons */
+        .number-input-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            background-color: #fff;
+            padding: 0.25rem;
+        }
+        .number-input-container button {
+            width: 2rem;
+            height: 2rem;
+            color: #6b7280;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        .number-input-container button:hover {
+            background-color: #e5e7eb;
+            border-radius: 0.25rem;
+        }
+        .number-input-container input {
+            width: 100%;
+            text-align: center;
+            -moz-appearance: textfield;
+            border: none;
+            outline: none;
+            background-color: transparent;
+        }
+
+        .section-divider {
+            border-top: 2px solid #e2e8f0;
+            margin: 2rem 0;
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -132,8 +204,7 @@
                                     <option value="driving">Driving (mileage-based)</option>
                                 </select>
                             </div>
-                            <!-- Updated Travel Origin dropdown with data-distance -->
-                            <div id="travel-origin-group">
+                            <div id="travel-origin-group" class="hidden">
                                 <label for="travelOrigin" class="block text-sm font-medium text-gray-700">Travel Origin</label>
                                 <select id="travelOrigin" name="travelOrigin" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2">
                                     <option value="">Select</option>
@@ -146,7 +217,6 @@
                                     <option value="Springfield, MO" data-distance="44">Springfield, MO (~44 miles)</option>
                                 </select>
                             </div>
-                            <!-- New input for mileage that shows for driving mode. This is now calculated based on origin. -->
                             <div id="mileage-details-group" class="hidden">
                                 <p class="text-sm text-gray-600">Driving cost is calculated based on a round trip at 20 MPG and $3.00/gallon.</p>
                             </div>
@@ -160,7 +230,7 @@
                                     <input type="number" id="childTravelers" name="childTravelers" min="0" value="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2">
                                 </div>
                             </div>
-                            <div>
+                            <div id="airport-group" class="hidden">
                                 <label for="arrivalAirport" class="block text-sm font-medium text-gray-700">Arrival Airport</label>
                                 <select id="arrivalAirport" name="arrivalAirport" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2">
                                     <option value="Springfield">Springfield</option>
@@ -170,23 +240,92 @@
                             </div>
                         </div>
                     </section>
+                    
+                    <div class="section-divider"></div>
 
                     <!-- Meal Planning -->
                     <section>
                         <h2 class="text-2xl font-bold text-gray-900 mb-4">🍽️ Meal Planning</h2>
-                        <p class="text-gray-600 mb-4">Select the meals your family will attend. The cost is calculated based on a base rate of $8 per meal for each adult, and $4 per meal for each child in your family.</p>
+                        <p class="text-gray-600 mb-4">Select the meals your family will attend. The cost is calculated at $5 for breakfast, $6 for lunch, and $8 for dinner per adult, with half-price for children.</p>
                         <div id="meals-list" class="space-y-4">
                             <!-- Meals will be dynamically populated here -->
                         </div>
                     </section>
 
+                    <div class="section-divider"></div>
+
                     <!-- Excursions -->
                     <section>
                         <h2 class="text-2xl font-bold text-gray-900 mb-4">Excursions</h2>
-                        <p class="text-gray-600 mb-4">Select number of participants for each activity.</p>
-                        <div id="excursions-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <!-- Excursion cards will be dynamically populated here -->
+                        <p class="text-gray-600 mb-4">Select the number of participants for each activity. The cost is per person.</p>
+                        
+                        <!-- Adventure & Thrill Category -->
+                        <div class="excursion-category">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">🎢 Adventure & Thrill</h3>
+                            <div id="adventure-thrill-excursions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <!-- Excursion cards will be dynamically populated here -->
+                            </div>
                         </div>
+
+                        <!-- Outdoors & Nature Category -->
+                        <div class="excursion-category">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">🏞️ Outdoors & Nature</h3>
+                            <div id="nature-excursions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <!-- Excursion cards will be dynamically populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Golf & Recreation Category -->
+                        <div class="excursion-category">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">⛳ Golf & Recreation</h3>
+                            <div id="golf-recreation-excursions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <!-- Excursion cards will be dynamically populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Shows & Entertainment Category -->
+                        <div class="excursion-category">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">🎭 Shows & Entertainment</h3>
+                            <div id="shows-entertainment-excursions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <!-- Excursion cards will be dynamically populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Indoor Fun & Museums Category -->
+                        <div class="excursion-category">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">🧠 Indoor Fun & Museums</h3>
+                            <div id="indoor-fun-excursions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <!-- Excursion cards will be dynamically populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Desserts & Treats Category -->
+                        <div class="excursion-category">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">🍦 Desserts & Treats (Interest Only)</h3>
+                            <p class="text-gray-600 mb-4 text-sm">Please check the box if you are interested in visiting these places.</p>
+                            <div id="desserts-excursions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <!-- Excursion cards will be dynamically populated here -->
+                            </div>
+                        </div>
+
+                         <!-- Rentals Category -->
+                         <div class="excursion-category">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">🚤 Rentals (Shared Cost Estimate)</h3>
+                            <p class="text-gray-600 mb-4 text-sm">Prices shown are per person estimates.</p>
+                            <div id="rentals-excursions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <!-- Excursion cards will be dynamically populated here -->
+                            </div>
+                        </div>
+
+                        <!-- Shopping & Free Time Category -->
+                        <div class="excursion-category">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-4">🛍️ Shopping & Free Time</h3>
+                            <p class="text-gray-600 mb-4 text-sm">Please check the box if you are interested in visiting these places.</p>
+                            <div id="shopping-excursions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <!-- Excursion cards will be dynamically populated here -->
+                            </div>
+                        </div>
+
                     </section>
 
                     <button type="submit" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-md transition-colors duration-200 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -196,34 +335,36 @@
                 </form>
             </div>
             
-            <!-- Right Side: Cost Summary Bar -->
-            <div class="cost-summary-bar lg:flex-shrink-0">
-                <h3 class="text-xl font-bold mb-4">Your Summary</h3>
-                <div id="detailedSummary" class="space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-200">Lodging Cost:</span>
-                        <span id="summary-lodging" class="font-semibold">$0.00</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-200">Extra Bed:</span>
-                        <span id="summary-extra-bed" class="font-semibold">$0.00</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-200">Travel Cost:</span>
-                        <span id="summary-travel" class="font-semibold">$0.00</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-200">Meal Cost:</span>
-                        <span id="summary-meals" class="font-semibold">$0.00</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-200">Excursion Cost:</span>
-                        <span id="summary-excursions" class="font-semibold">$0.00</span>
+            <!-- Right Side: Cost Summary Card -->
+            <div class="lg:w-1/3">
+                <div class="cost-summary-bar">
+                    <h3 class="text-xl font-bold mb-4">Your Summary</h3>
+                    <div id="detailedSummary" class="space-y-3">
+                        <div class="flex justify-between items-center text-sm mb-1">
+                            <span class="text-gray-200">Lodging Cost:</span>
+                            <span id="summary-lodging" class="font-semibold text-right">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm mb-1">
+                            <span class="text-gray-200">Extra Bed:</span>
+                            <span id="summary-extra-bed" class="font-semibold text-right">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm mb-1">
+                            <span class="text-gray-200">Travel Cost:</span>
+                            <span id="summary-travel" class="font-semibold text-right">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm mb-1">
+                            <span class="text-gray-200">Meal Cost:</span>
+                            <span id="summary-meals" class="font-semibold text-right">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm mb-1">
+                            <span class="text-gray-200">Excursion Cost:</span>
+                            <span id="summary-excursions" class="font-semibold text-right">$0.00</span>
+                        </div>
                     </div>
                     <hr class="border-t border-gray-600 my-4">
                     <div class="flex justify-between items-center text-xl font-bold">
                         <span>Total:</span>
-                        <span id="summary-total">$0.00</span>
+                        <span id="summary-total-cost">$0.00</span>
                     </div>
                 </div>
             </div>
@@ -231,209 +372,435 @@
         </div>
     </div>
 
+    <!-- JavaScript for dynamic calculations and form submission -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Form elements and containers
             const reunionForm = document.getElementById('reunionForm');
             const mainContent = document.getElementById('mainContent');
             const confirmationPage = document.getElementById('confirmationPage');
             const confirmationCard = document.getElementById('confirmationCard');
             const messageBox = document.getElementById('messageBox');
             const costSummaryBar = document.querySelector('.cost-summary-bar');
-            const mileageDetailsGroup = document.getElementById('mileage-details-group');
+
+            // Form sections
+            const lodgingCostSelect = document.getElementById('lodgingCost');
+            const extraBedCheckbox = document.getElementById('extraBed');
+            const travelModeSelect = document.getElementById('travelMode');
             const travelOriginSelect = document.getElementById('travelOrigin');
+            const adultTravelersInput = document.getElementById('adultTravelers');
+            const childTravelersInput = document.getElementById('childTravelers');
+            const airportGroup = document.getElementById('airport-group');
+            const travelOriginGroup = document.getElementById('travel-origin-group');
+            const mileageDetailsGroup = document.getElementById('mileage-details-group');
+            const mealsList = document.getElementById('meals-list');
+            
+            // New excursion containers
+            const adventureThrillExcursionsContainer = document.getElementById('adventure-thrill-excursions');
+            const natureExcursionsContainer = document.getElementById('nature-excursions');
+            const golfRecreationExcursionsContainer = document.getElementById('golf-recreation-excursions');
+            const showsEntertainmentExcursionsContainer = document.getElementById('shows-entertainment-excursions');
+            const indoorFunExcursionsContainer = document.getElementById('indoor-fun-excursions');
+            const dessertsExcursionsContainer = document.getElementById('desserts-excursions');
+            const rentalsExcursionsContainer = document.getElementById('rentals-excursions');
+            const shoppingExcursionsContainer = document.getElementById('shopping-excursions');
+
+            // Summary elements
+            const summaryLodging = document.getElementById('summary-lodging');
+            const summaryExtraBed = document.getElementById('summary-extra-bed');
+            const summaryTravel = document.getElementById('summary-travel');
+            const summaryMeals = document.getElementById('summary-meals');
+            const summaryExcursions = document.getElementById('summary-excursions');
+            const summaryTotalCost = document.getElementById('summary-total-cost');
             
             // This is a placeholder URL and placeholder entry IDs.
-            // YOU MUST create your own Google Form and replace this URL and the entry IDs below.
-            // 1. Create a Google Form with fields matching the form's inputs.
-            // 2. Go to the "Live" form and inspect the HTML.
-            // 3. Find the `form action` URL and replace it below.
-            // 4. Find the `name` attributes for each input and replace the `entry.xxxx` values below.
             const googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSc5jB0nhVWjpjHoViUiEJqX7BBheodhDNge6Pzb12yhTrnG3Q/formResponse';
             const googleFormEntryIds = {
-                familyName: 'entry.123456789',
-                attendees: 'entry.987654321',
-                lodging: 'entry.112233445',
-                extraBed: 'entry.556677889',
-                travelMode: 'entry.998877665',
-                travelOrigin: 'entry.123123123',
-                arrivalAirport: 'entry.321321321',
-                adultTravelers: 'entry.456456456',
-                childTravelers: 'entry.654654654',
-                mileage: 'entry.789789789', // New entry ID for mileage
-                selectedMeals: 'entry.910111213',
-                selectedExcursions: 'entry.141516171',
-                totalCost: 'entry.181920212'
+                familyName: 'entry.1111',
+                attendees: 'entry.2222',
+                lodgingCost: 'entry.3333',
+                extraBed: 'entry.4444',
+                travelMode: 'entry.5555',
+                travelOrigin: 'entry.6666',
+                arrivalAirport: 'entry.7777',
+                adultTravelers: 'entry.8888',
+                childTravelers: 'entry.9999',
+                mileage: 'entry.1010',
+                selectedMeals: 'entry.1112',
+                selectedExcursions: 'entry.1113',
+                totalCost: 'entry.1114',
+                selectedInterestOnly: 'entry.1115'
             };
 
-            const excursions = [
-                { id: "silverDollarCity", name: "Silver Dollar City", description: "A sprawling 1880s-style theme park with thrilling coasters, craft demonstrations, and live entertainment.", adultPrice: 89, childPrice: 79 },
-                { id: "bransonMountainCoaster", name: "Branson Mountain Coaster", description: "Race through the Ozark hills on a self-controlled alpine coaster with dips and turns through the woods.", adultPrice: 20, childPrice: 20 },
-                { id: "wolfeMountainZipline", name: "Wolfe Mountain Zipline", description: "Soar through tree canopies on scenic ziplines and explore the Snowflex tubing hill in all seasons.", adultPrice: 130, childPrice: 130 },
-                { id: "fritzsAdventure", name: "Fritz’s Adventure", description: "Indoor adventure park with ropes courses, underground tunnels, climbing walls, and thrilling slides.", adultPrice: 35, childPrice: 35 },
-                { id: "shepherdHillsAdventurePark", name: "Shepherd of the Hills Adventure Park", description: "Classic Branson destination offering ziplines, ropes courses, and a historic outdoor drama.", adultPrice: 30, childPrice: 30 },
-                { id: "bigfootFunPark", name: "Bigfoot Fun Park", description: "Family fun with thrill rides, arcade games, and themed Bigfoot attractions including a gravity bomb.", adultPrice: 25, childPrice: 25 },
-                { id: "xtremeRacingCenter", name: "Xtreme Racing Center", description: "Go full throttle on high-speed karts built for racing on a professionally designed outdoor track.", adultPrice: 40, childPrice: 40 },
-                { id: "dogwoodCanyonNaturePark", name: "Dogwood Canyon Nature Park", description: "Explore lush trails, waterfalls, and wildlife on foot or by tram through this 10,000-acre private preserve.", adultPrice: 20, childPrice: 12 },
-                { id: "topOfTheRockGolfCartTour", name: "Top of the Rock Golf Cart Tour", description: "Drive through stunning canyons and caves on a self-guided cart tour with panoramic Ozark views.", adultPrice: 50, childPrice: 35 },
-                { id: "tableRockLakeBoating", name: "Table Rock Lake & Boating", description: "Enjoy a relaxing day swimming, fishing, or boating on the crystal-clear waters of Table Rock Lake.", adultPrice: 10, childPrice: 10 },
-                { id: "ozarkMountainBiking", name: "Ozark Mountain Biking", description: "Tackle scenic mountain trails suited for all skill levels with bike rentals available on-site.", adultPrice: 20, childPrice: 20 },
-                { id: "shepherdHillsPettingZoo", name: "Shepherd of the Hills Petting Zoo", description: "Feed goats, llamas, and other animals at this charming farm-themed experience for all ages.", adultPrice: 10, childPrice: 10 },
-                { id: "henningConservationArea", name: "Henning Conservation Area", description: "Free scenic hiking trails through wooded Ozark hills and a historic fire tower overlook.", adultPrice: 0, childPrice: 0 },
-                { id: "lakesideForestWildernessArea", name: "Lakeside Forest Wilderness Area", description: "Nature preserve with waterfalls, stone steps, and panoramic views of Lake Taneycomo.", adultPrice: 0, childPrice: 0 },
-                { id: "bigCedarLodgeGolf", name: "Big Cedar Lodge Golf", description: "Play on world-class courses like Payne’s Valley, with breathtaking views and professional-grade design.", adultPrice: 300, childPrice: 300 },
-                { id: "miniGolf", name: "Mini Golf", description: "Enjoy light-hearted competition at whimsical mini golf courses located across Branson.", adultPrice: 15, childPrice: 15 },
-                { id: "bransonTracksArcade", name: "Branson Tracks & Arcade", description: "Fast-paced go-kart tracks, classic arcade games, and mini thrill rides for all ages.", adultPrice: 15, childPrice: 15 },
-                { id: "familyBowlingNight", name: "Family Bowling Night", description: "Unwind with a family-friendly night at one of Branson’s retro or modern bowling alleys.", adultPrice: 25, childPrice: 25 },
-                { id: "dollyPartonStampede", name: "Dolly Parton’s Stampede", description: "A four-course dinner and action-packed show with horseback stunts, music, and patriotic flair.", adultPrice: 65, childPrice: 35 },
-                { id: "sightSoundTheatre", name: "Sight & Sound Theatre", description: "Epic Bible stories brought to life with Broadway-quality acting, animals, and massive sets.", adultPrice: 80, childPrice: 35 },
-                { id: "showboatBransonBelle", name: "Showboat Branson Belle", description: "Cruise Table Rock Lake with a three-course dinner and live music, comedy, and variety shows.", adultPrice: 70, childPrice: 40 },
-                { id: "imaxEntertainmentComplex", name: "IMAX Entertainment Complex", description: "Catch Hollywood films and live performances on one of the largest IMAX screens in the Midwest.", adultPrice: 20, childPrice: 20 },
-                { id: "rezaEdgeOfIllusion", name: "Reza: Edge of Illusion", description: "Mind-blowing magic and illusion in one of Branson’s most popular modern shows.", adultPrice: 45, childPrice: 25 },
-                { id: "clayCooperCountryExpress", name: "Clay Cooper’s Country Express", description: "High-energy country, rock and comedy from Branson's hometown entertainer.", adultPrice: 40, childPrice: 20 },
-                { id: "presleysCountryJubilee", name: "The Presley’s Country Jubilee", description: "Classic Ozarks comedy and country music performed by Branson’s first family of entertainment.", adultPrice: 42, childPrice: 20 },
-                { id: "hughesMusicShow", name: "The Hughes Music Show", description: "Big family production with music, dance, and light effects — performed by the Hughes Brothers.", adultPrice: 38, childPrice: 18 },
-                { id: "texasTenors", name: "The Texas Tenors", description: "America’s Got Talent favorites blend country, classical, and pop in a polished vocal performance.", adultPrice: 50, childPrice: 25 },
-                { id: "theHaygoods", name: "The Haygoods", description: "High-energy music show featuring sibling performers, pyrotechnics, and modern harmonies.", adultPrice: 47, childPrice: 25 },
-                { id: "theDuttons", name: "The Duttons", description: "Family of musicians performing country, bluegrass, and pop hits.", adultPrice: 43, childPrice: 22 },
-                { id: "wonderWorks", name: "WonderWorks", description: "An upside-down science museum with over 100 hands-on exhibits, laser tag, and rope courses.", adultPrice: 35, childPrice: 20 },
-                { id: "aquariumAtTheBoardwalk", name: "Aquarium at the Boardwalk", description: "Dive into ocean life with touch tanks, a jellyfish room, and a 5D submarine ride.", adultPrice: 30, childPrice: 15 },
-                { id: "titanicMuseum", name: "Titanic Museum", description: "Experience the tragedy and triumph of the Titanic through artifacts, replicas, and guided tours.", adultPrice: 35, childPrice: 20 },
-                { id: "butterflyPalace", name: "Butterfly Palace", description: "Stroll through a lush tropical garden filled with thousands of free-flying butterflies.", adultPrice: 25, childPrice: 15 },
-                { id: "ripleysBelieveItOrNot", name: "Ripley’s Believe It or Not!", description: "Weird, wacky, and unbelievable — explore oddities from around the globe in themed galleries.", adultPrice: 25, childPrice: 15 },
-                { id: "retroArcadeNight", name: "Retro Arcade Night", description: "Step into the '80s with classic arcade cabinets and unlimited play passes.", adultPrice: 20, childPrice: 20 },
-                { id: "hollywoodWaxMuseum", name: "Hollywood Wax Museum", description: "Pose with realistic wax figures of your favorite celebrities and pop culture icons.", adultPrice: 30, childPrice: 18 },
-                { id: "beyondTheLens", name: "Beyond the Lens!", description: "Explore interactive exhibits on pop culture, conspiracy theories, and tech-infused games.", adultPrice: 32, childPrice: 20 },
-                { id: "bransonDinosaurMuseum", name: "Branson Dinosaur Museum", description: "Walk among life-sized dinosaur replicas and learn about prehistoric life.", adultPrice: 15, childPrice: 10 },
-                { id: "worldsLargestToyMuseum", name: "World's Largest Toy Museum", description: "Over a million toys from every generation in this massive nostalgic collection.", adultPrice: 24, childPrice: 16 },
-                { id: "jetSkiRentals", name: "Jet Ski Rentals", description: "Ride the waves on Table Rock Lake with fast and fun Jet Ski rentals by the hour.", adultPrice: 100, childPrice: 100 },
-                { id: "boatAndTubes", name: "Boat and Tubes", description: "Rent a pontoon or ski boat for tubing, cruising, or relaxing with the whole crew.", adultPrice: 125, childPrice: 125 }
-            ];
-
             const meals = [
-                { id: 'Sunday_Breakfast', name: 'Sunday - Breakfast'},
-                { id: 'Sunday_Lunch', name: 'Sunday - Lunch'},
-                { id: 'Sunday_Dinner', name: 'Sunday - Dinner: BBQ Night'},
-                { id: 'Monday_Breakfast', name: 'Monday - Breakfast'},
-                { id: 'Monday_Lunch', name: 'Monday - Lunch'},
-                { id: 'Monday_Dinner', name: 'Monday - Dinner: Taco Bar'},
-                { id: 'Tuesday_Breakfast', name: 'Tuesday - Breakfast'},
-                { id: 'Tuesday_Lunch', name: 'Tuesday - Lunch'},
-                { id: 'Tuesday_Dinner', name: 'Tuesday - Dinner: Burgers & Brats'},
-                { id: 'Wednesday_Breakfast', name: 'Wednesday - Breakfast'},
-                { id: 'Wednesday_Lunch', name: 'Wednesday - Lunch'},
-                { id: 'Wednesday_Dinner', name: 'Wednesday - Dinner: Pasta Night'},
-                { id: 'Thursday_Breakfast', name: 'Thursday - Breakfast'},
-                { id: 'Thursday_Lunch', name: 'Thursday - Lunch'},
-                { id: 'Thursday_Dinner', name: 'Thursday - Dinner: Pizza Night'},
-                { id: 'Friday_Breakfast', name: 'Friday - Breakfast'},
-                { id: 'Friday_Lunch', name: 'Friday - Lunch'},
-                { id: 'Friday_Dinner', name: 'Friday - Dinner: Leftovers / Free Night'},
-                { id: 'Saturday_Breakfast', name: 'Saturday - Breakfast'},
-                { id: 'Saturday_Lunch', name: 'Saturday - Lunch'},
-                { id: 'Saturday_Dinner', name: 'Saturday - Dinner: Sandwich Bar'}
+                { id: "Sunday_Breakfast", name: "Sunday Breakfast", cost: { adult: 5, child: 2.5 } },
+                { id: "Sunday_Lunch", name: "Sunday Lunch", cost: { adult: 6, child: 3 } },
+                { id: "Sunday_Dinner", name: "Sunday Dinner", cost: { adult: 8, child: 4 } },
+                { id: "Monday_Breakfast", name: "Monday Breakfast", cost: { adult: 5, child: 2.5 } },
+                { id: "Monday_Lunch", name: "Monday Lunch", cost: { adult: 6, child: 3 } },
+                { id: "Monday_Dinner", name: "Monday Dinner", cost: { adult: 8, child: 4 } },
+                { id: "Tuesday_Breakfast", name: "Tuesday Breakfast", cost: { adult: 5, child: 2.5 } },
+                { id: "Tuesday_Lunch", name: "Tuesday Lunch", cost: { adult: 6, child: 3 } },
+                { id: "Tuesday_Dinner", name: "Tuesday Dinner", cost: { adult: 8, child: 4 } },
+                { id: "Wednesday_Breakfast", name: "Wednesday Breakfast", cost: { adult: 5, child: 2.5 } },
+                { id: "Wednesday_Lunch", name: "Wednesday Lunch", cost: { adult: 6, child: 3 } },
+                { id: "Wednesday_Dinner", name: "Wednesday Dinner", cost: { adult: 8, child: 4 } },
             ];
 
-            function renderExcursions() {
-                const excursionsList = document.getElementById('excursions-list');
-                excursionsList.innerHTML = excursions.map(excursion => `
-                    <div class="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-lg font-bold">${excursion.name}</h3>
-                            <p class="text-sm text-gray-600">${excursion.description}</p>
-                            <div class="mt-4 text-sm font-semibold text-gray-700">
-                                Adults: $${excursion.adultPrice} | Children: $${excursion.childPrice}
-                            </div>
-                        </div>
-                        <div class="mt-4 space-y-3">
-                            <div class="flex items-center justify-between">
-                                <span class="font-medium">Adults</span>
-                                <div class="flex items-center space-x-2">
-                                    <button type="button" data-id="${excursion.id}" data-type="adult" data-action="decrement" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">-</button>
-                                    <span id="${excursion.id}-adult-count" class="font-bold text-lg w-6 text-center">${excursion.adultCount || 0}</span>
-                                    <button type="button" data-id="${excursion.id}" data-type="adult" data-action="increment" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">+</button>
-                                </div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="font-medium">Children</span>
-                                <div class="flex items-center space-x-2">
-                                    <button type="button" data-id="${excursion.id}" data-type="child" data-action="decrement" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">-</button>
-                                    <span id="${excursion.id}-child-count" class="font-bold text-lg w-6 text-center">${excursion.childCount || 0}</span>
-                                    <button type="button" data-id="${excursion.id}" data-type="child" data-action="increment" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">+</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            function renderMeals() {
-                const mealsList = document.getElementById('meals-list');
-                const mealHTML = `
-                    ${meals.map(meal => `
-                        <div class="flex items-center">
-                            <input type="checkbox" id="${meal.id}" name="${meal.id}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                            <label for="${meal.id}" class="ml-2 block text-sm font-medium text-gray-700">${meal.name}</label>
-                        </div>
-                    `).join('')}
-                `;
-                mealsList.innerHTML = mealHTML;
-            }
-
-            function updateSummary() {
-                const lodgingCost = parseFloat(document.getElementById('lodgingCost').value) || 0;
-                const extraBedCost = document.getElementById('extraBed').checked ? 450 : 0;
-                const travelMode = document.getElementById('travelMode').value;
-                const adultTravelers = parseInt(document.getElementById('adultTravelers').value) || 0;
-                const childTravelers = parseInt(document.getElementById('childTravelers').value) || 0;
+            const excursions = [
+                // Adventure & Thrill
+                { category: 'adventure-thrill', id: "silverDollarCity", name: "Silver Dollar City", description: "A sprawling 1880s-style theme park with thrilling coasters, craft demonstrations, and live entertainment.", adultPrice: 89, childPrice: 79, url: "https://www.silverdollarcity.com" },
+                { category: 'adventure-thrill', id: "bransonMountainCoaster", name: "Branson Mountain Coaster", description: "Race through the Ozark hills on a self-controlled alpine coaster with dips and turns through the woods.", adultPrice: 20, childPrice: 20, url: "https://bransonmountaincoaster.com" },
+                { category: 'adventure-thrill', id: "wolfeMountainZipline", name: "Wolfe Mountain Zipline", description: "Soar through tree canopies on scenic ziplines and explore the Snowflex tubing hill in all seasons.", adultPrice: 130, childPrice: 130, url: "https://wolfemountainbranson.com" },
+                { category: 'adventure-thrill', id: "fritzsAdventure", name: "Fritz’s Adventure", description: "Indoor adventure park with ropes courses, underground tunnels, climbing walls, and thrilling slides.", adultPrice: 35, childPrice: 35, url: "https://www.fritzsadventure.com" },
+                { category: 'adventure-thrill', id: "shepherdHillsAdventurePark", name: "Shepherd of the Hills Adventure Park", description: "Classic Branson destination offering ziplines, ropes courses, and a historic outdoor drama.", adultPrice: 30, childPrice: 30, url: "https://www.shepherdofthehills.com" },
+                { category: 'adventure-thrill', id: "bigfootFunPark", name: "Bigfoot Fun Park", description: "Family fun with thrill rides, arcade games, and themed Bigfoot attractions including a gravity bomb.", adultPrice: 25, childPrice: 25, url: "https://bigfootfunpark.com" },
+                { category: 'adventure-thrill', id: "xtremeRacingCenter", name: "Xtreme Racing Center", description: "Go full throttle on high-speed karts built for racing on a professionally designed outdoor track.", adultPrice: 40, childPrice: 40, url: "https://xtremeracingcenter.com" },
                 
-                let travelCost = 0;
-                if (travelMode === 'flying') {
-                    travelCost = (adultTravelers + childTravelers) * 400;
-                    mileageDetailsGroup.classList.add('hidden');
-                    travelOriginSelect.classList.remove('hidden');
-                } else if (travelMode === 'driving') {
-                    // New driving cost logic
-                    const selectedOrigin = travelOriginSelect.options[travelOriginSelect.selectedIndex];
-                    const distance = parseFloat(selectedOrigin.dataset.distance) || 0;
-                    const mpg = 20;
-                    const gasPrice = 3.00;
-                    travelCost = (distance / mpg) * gasPrice * 2; // Round trip
-                    mileageDetailsGroup.classList.remove('hidden');
-                } else {
-                    mileageDetailsGroup.classList.add('hidden');
+                // Outdoors & Nature
+                { category: 'nature', id: "dogwoodCanyonNaturePark", name: "Dogwood Canyon Nature Park", description: "Explore lush trails, waterfalls, and wildlife on foot or by tram through this 10,000-acre private preserve.", adultPrice: 20, childPrice: 12, url: "https://www.dogwoodcanyon.org" },
+                { category: 'nature', id: "topOfTheRockGolfCartTour", name: "Top of the Rock Golf Cart Tour", description: "Drive through stunning canyons and caves on a self-guided cart tour with panoramic Ozark views.", adultPrice: 50, childPrice: 35, url: "https://topoftherock.com/activities/lost-canyon-cave-and-nature-trail/" },
+                { category: 'nature', id: "tableRockLakeBoating", name: "Table Rock Lake & Boating", description: "Enjoy a relaxing day swimming, fishing, or boating on the crystal-clear waters of Table Rock Lake.", adultPrice: 10, childPrice: 10, url: "https://mostateparks.com/park/table-rock-state-park" },
+                { category: 'nature', id: "ozarkMountainBiking", name: "Ozark Mountain Biking", description: "Tackle scenic mountain trails suited for all skill levels with bike rentals available on-site.", adultPrice: 20, childPrice: 20, url: null },
+                { category: 'nature', id: "shepherdHillsPettingZoo", name: "Shepherd of the Hills Petting Zoo", description: "Feed goats, llamas, and other animals at this charming farm-themed experience for all ages.", adultPrice: 10, childPrice: 10, url: "https://www.shepherdofthehills.com/attractions/petting-zoo" },
+                { category: 'nature', id: "henningConservationArea", name: "Henning Conservation Area", description: "Free scenic hiking trails through wooded Ozark hills and a historic fire tower overlook.", adultPrice: 0, childPrice: 0, url: "https://mdc.mo.gov/discover-nature/places/drury-m-henning-conservation-area" },
+                { category: 'nature', id: "lakesideForestWildernessArea", name: "Lakeside Forest Wilderness Area", description: "Nature preserve with waterfalls, stone steps, and panoramic views of Lake Taneycomo.", adultPrice: 0, childPrice: 0, url: "https://www.bransonmo.gov/395/Lakeside-Forest-Wilderness-Area" },
+                
+                // Golf & Recreation
+                { category: 'golf-recreation', id: "bigCedarLodgeGolf", name: "Big Cedar Lodge Golf", description: "Play on world-class courses like Payne’s Valley, with breathtaking views and professional-grade design.", adultPrice: 300, childPrice: 300, url: "https://bigcedar.com/golf" },
+                { category: 'golf-recreation', id: "miniGolf", name: "Mini Golf", description: "Enjoy light-hearted competition at whimsical mini golf courses located across Branson.", adultPrice: 15, childPrice: 15, url: null },
+                { category: 'golf-recreation', id: "bransonTracksArcade", name: "Branson Tracks & Arcade", description: "Fast-paced go-kart tracks, classic arcade games, and mini thrill rides for all ages.", adultPrice: 15, childPrice: 15, url: "https://bransontracks.com" },
+                { category: 'golf-recreation', id: "familyBowlingNight", name: "Family Bowling Night", description: "Unwind with a family-friendly night at one of Branson’s retro or modern bowling alleys.", adultPrice: 25, childPrice: 25, url: null },
+                
+                // Shows & Entertainment
+                { category: 'shows-entertainment', id: "dollyPartonStampede", name: "Dolly Parton’s Stampede", description: "A four-course dinner and action-packed show with horseback stunts, music, and patriotic flair.", adultPrice: 65, childPrice: 35, url: "https://dpstampede.com" },
+                { category: 'shows-entertainment', id: "sightAndSoundTheatre", name: "Sight & Sound Theatre", description: "Epic Bible stories brought to life with Broadway-quality acting, animals, and massive sets.", adultPrice: 80, childPrice: 35, url: "https://www.sight-sound.com/shows/branson" },
+                { category: 'shows-entertainment', id: "showboatBransonBelle", name: "Showboat Branson Belle", description: "Cruise Table Rock Lake with a three-course dinner and live music, comedy, and variety shows.", adultPrice: 70, childPrice: 40, url: "https://www.silverdollarcity.com/showboat-branson-belle" },
+                { category: 'shows-entertainment', id: "imaxEntertainmentComplex", name: "IMAX Entertainment Complex", description: "Catch Hollywood films and live performances on one of the largest IMAX screens in the Midwest.", adultPrice: 20, childPrice: 20, url: "https://bransonimax.com" },
+                { category: 'shows-entertainment', id: "rezaEdgeOfIllusion", name: "Reza: Edge of Illusion", description: "Mind-blowing magic and illusion in one of Branson’s most popular modern shows.", adultPrice: 45, childPrice: 25, url: "https://rezalive.com" },
+                { category: 'shows-entertainment', id: "clayCooper", name: "Clay Cooper’s Country Express", description: "High-energy country, rock and comedy from Branson's hometown entertainer.", adultPrice: 40, childPrice: 20, url: "https://claycooper.com" },
+                { category: 'shows-entertainment', id: "presleysCountryJubilee", name: "The Presley’s Country Jubilee", description: "Classic Ozarks comedy and country music performed by Branson’s first family of entertainment.", adultPrice: 42, childPrice: 20, url: "https://presleys.com" },
+                { category: 'shows-entertainment', id: "hughesMusicShow", name: "The Hughes Music Show", description: "Big family production with music, dance, and light effects — performed by the Hughes Brothers.", adultPrice: 38, childPrice: 18, url: "https://hughesmusicshow.com" },
+                { category: 'shows-entertainment', id: "texasTenors", name: "The Texas Tenors", description: "America’s Got Talent favorites blend country, classical, and pop in a polished vocal performance.", adultPrice: 50, childPrice: 25, url: "https://thetexastenors.com" },
+                { category: 'shows-entertainment', id: "haygoods", name: "The Haygoods", description: "High-energy music show featuring sibling performers, pyrotechnics, and modern harmonies.", adultPrice: 47, childPrice: 25, url: "https://thehaygoods.com" },
+                { category: 'shows-entertainment', id: "duttons", name: "The Duttons", description: "Family of musicians performing country, bluegrass, and pop hits.", adultPrice: 43, childPrice: 22, url: "https://theduttons.com" },
+
+                // Indoor Fun & Museums
+                { category: 'indoor-fun', id: "wonderworks", name: "WonderWorks", description: "An upside-down science museum with over 100 hands-on exhibits, laser tag, and rope courses.", adultPrice: 35, childPrice: 20, url: "https://www.wonderworksonline.com/branson" },
+                { category: 'indoor-fun', id: "aquariumAtTheBoardwalk", name: "Aquarium at the Boardwalk", description: "Dive into ocean life with touch tanks, a jellyfish room, and a 5D submarine ride.", adultPrice: 30, childPrice: 15, url: "https://www.aquariumattheboardwalk.com" },
+                { category: 'indoor-fun', id: "titanicMuseum", name: "Titanic Museum", description: "Experience the tragedy and triumph of the Titanic through artifacts, replicas, and guided tours.", adultPrice: 35, childPrice: 20, url: "https://titanicbranson.com" },
+                { category: 'indoor-fun', id: "butterflyPalace", name: "Butterfly Palace", description: "Stroll through a lush tropical garden filled with thousands of free-flying butterflies.", adultPrice: 25, childPrice: 15, url: "https://www.thebutterflypalace.com" },
+                { category: 'indoor-fun', id: "ripleysBelieveItOrNot", name: "Ripley’s Believe It or Not!", description: "Weird, wacky, and unbelievable — explore oddities from around the globe in themed galleries.", adultPrice: 25, childPrice: 15, url: "https://www.ripleys.com/branson" },
+                { category: 'indoor-fun', id: "retroArcadeNight", name: "Retro Arcade Night", description: "Step into the '80s with classic arcade cabinets and unlimited play passes.", adultPrice: 20, childPrice: 20, url: null },
+                { category: 'indoor-fun', id: "hollywoodWaxMuseum", name: "Hollywood Wax Museum", description: "Pose with realistic wax figures of your favorite celebrities and pop culture icons.", adultPrice: 30, childPrice: 18, url: "https://www.hollywoodwaxentertainment.com" },
+                { category: 'indoor-fun', id: "beyondTheLens", name: "Beyond the Lens!", description: "Explore interactive exhibits on pop culture, conspiracy theories, and tech-infused games.", adultPrice: 32, childPrice: 20, url: "https://www.beyondthelens.com" },
+                { category: 'indoor-fun', id: "bransonDinosaurMuseum", name: "Branson Dinosaur Museum", description: "Walk among life-sized dinosaur replicas and learn about prehistoric life.", adultPrice: 15, childPrice: 10, url: "https://bransondinosaurmuseum.com" },
+                { category: 'indoor-fun', id: "worldsLargestToyMuseum", name: "World's Largest Toy Museum", description: "Over a million toys from every generation in this massive nostalgic collection.", adultPrice: 24, childPrice: 16, url: "https://toymuseum.org" },
+
+                // Rentals
+                { category: 'rentals', id: "jetSkiRentals", name: "Jet Ski Rentals", description: "Ride the waves on Table Rock Lake with fast and fun Jet Ski rentals by the hour.", adultPrice: 100, childPrice: 100, url: null },
+                { category: 'rentals', id: "boatAndTubes", name: "Boat and Tubes", description: "Rent a pontoon or ski boat for tubing, cruising, or relaxing with the whole crew.", adultPrice: 125, childPrice: 125, url: null },
+            ];
+
+            const interestOnly = [
+                // Desserts & Treats (Interest Only)
+                { category: 'desserts', id: "andysFrozenCustard", name: "Andy’s Frozen Custard", url: "https://www.eatandys.com" },
+                { category: 'desserts', id: "cakesNCreams", name: "Cakes-n-Creams 50s Diner", url: "https://cakesncream.com" },
+                { category: 'desserts', id: "kilwins", name: "Kilwins Chocolates & Ice Cream", url: "https://www.kilwins.com/stores/kilwins-branson" },
+                { category: 'desserts', id: "parlorDoughnuts", name: "Parlor Doughnuts", url: "https://www.parlordoughnuts.com" },
+                { category: 'desserts', id: "sugarLeafBakery", name: "Sugar Leaf Bakery & Café", url: "https://www.sugarleaftreats.com" },
+                { category: 'desserts', id: "creamAndSugar", name: "Cream & Sugar Dessert Bar (Hollister)", url: null },
+                { category: 'desserts', id: "melsHardLuckDiner", name: "Mel’s Hard Luck Diner", url: "https://www.melshardluckdiner.com" },
+                
+                // Shopping & Free Time
+                { category: 'shopping', id: "tangerOutlets", name: "Outlet Mall Shopping Trip (Tanger Outlets)", url: "https://www.tanger.com/branson" },
+                { category: 'shopping', id: "bransonLanding", name: "Branson Landing", url: "https://www.bransonlanding.com" }
+            ];
+
+            // Helper function to format currency
+            const formatCurrency = (value) => `$${value.toFixed(2)}`;
+
+            // Helper function to render a single meal item
+            const renderMeal = (meal) => {
+                const mealItem = document.createElement('div');
+                mealItem.className = "flex items-center space-x-2";
+                mealItem.innerHTML = `
+                    <input type="checkbox" id="${meal.id}" name="selectedMeals" value="${meal.id}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                    <label for="${meal.id}" class="block text-sm font-medium text-gray-700">${meal.name}</label>
+                `;
+                mealsList.appendChild(mealItem);
+            };
+
+            // Helper function to render a single excursion card (number inputs)
+            const renderExcursion = (excursion, container) => {
+                const excursionCard = document.createElement('div');
+                excursionCard.className = "activity bg-gray-50 p-4 rounded-lg shadow-inner";
+                excursionCard.innerHTML = `
+                    <h4 class="font-medium text-lg text-gray-900">
+                        ${excursion.url ? `<a href="${excursion.url}" target="_blank" class="hover:underline">${excursion.name}</a>` : `<span>${excursion.name}</span>`}
+                    </h4>
+                    <p class="text-sm text-gray-500 mb-2">${excursion.description}</p>
+                    <div class="flex items-center space-x-4">
+                        <label class="flex-grow">
+                            <span class="text-xs font-medium text-gray-700">Adults ($${excursion.adultPrice}):</span>
+                            <div class="number-input-container">
+                                <button type="button" class="decrement" data-target-id="${excursion.id}Adults">-</button>
+                                <input type="number" id="${excursion.id}Adults" name="${excursion.id}Adults" min="0" value="0">
+                                <button type="button" class="increment" data-target-id="${excursion.id}Adults">+</button>
+                            </div>
+                        </label>
+                        <label class="flex-grow">
+                            <span class="text-xs font-medium text-gray-700">Kids ($${excursion.childPrice}):</span>
+                            <div class="number-input-container">
+                                <button type="button" class="decrement" data-target-id="${excursion.id}Kids">-</button>
+                                <input type="number" id="${excursion.id}Kids" name="${excursion.id}Kids" min="0" value="0">
+                                <button type="button" class="increment" data-target-id="${excursion.id}Kids">+</button>
+                            </div>
+                        </label>
+                    </div>
+                `;
+                container.appendChild(excursionCard);
+            };
+            
+            // Helper function to render a single interest-only item (checkboxes)
+            const renderInterestOnly = (item, container) => {
+                const interestItem = document.createElement('div');
+                interestItem.className = "flex items-start space-x-2 bg-gray-50 p-4 rounded-lg shadow-inner";
+                interestItem.innerHTML = `
+                    <input type="checkbox" id="${item.id}" name="selectedInterestOnly" value="${item.id}" class="mt-1 h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                    <div class="flex-grow">
+                        <label for="${item.id}" class="block text-sm font-medium text-gray-700">
+                            ${item.url ? `<a href="${item.url}" target="_blank" class="hover:underline">${item.name}</a>` : `<span>${item.name}</span>`}
+                        </label>
+                    </div>
+                `;
+                container.appendChild(interestItem);
+            };
+
+            // Function to handle increment/decrement buttons
+            const handleButtonClick = (e) => {
+                const button = e.target;
+                if (button.tagName !== 'BUTTON') return;
+                
+                const targetId = button.getAttribute('data-target-id');
+                const input = document.getElementById(targetId);
+                let value = parseInt(input.value) || 0;
+
+                if (button.classList.contains('increment')) {
+                    value++;
+                } else if (button.classList.contains('decrement') && value > 0) {
+                    value--;
                 }
                 
-                let mealCost = 0;
-                const perMealRate = 8 * (adultTravelers + 0.5 * childTravelers);
-                document.querySelectorAll('#meals-list input[type="checkbox"]:checked').forEach(checkbox => {
-                    mealCost += perMealRate;
-                });
+                input.value = value;
+                updateTotal();
+            };
 
-                let excursionCost = 0;
-                excursions.forEach(excursion => {
-                    excursionCost += ((excursion.adultCount || 0) * excursion.adultPrice) + ((excursion.childCount || 0) * excursion.childPrice);
-                });
-
-                const totalCost = lodgingCost + extraBedCost + travelCost + mealCost + excursionCost;
-
-                document.getElementById('summary-lodging').textContent = `$${lodgingCost.toFixed(2)}`;
-                document.getElementById('summary-extra-bed').textContent = `$${extraBedCost.toFixed(2)}`;
-                document.getElementById('summary-travel').textContent = `$${travelCost.toFixed(2)}`;
-                document.getElementById('summary-meals').textContent = `$${mealCost.toFixed(2)}`;
-                document.getElementById('summary-excursions').textContent = `$${excursionCost.toFixed(2)}`;
-                document.getElementById('summary-total').textContent = `$${totalCost.toFixed(2)}`;
+            // Function to render all meals and excursions
+            const renderFormItems = () => {
+                meals.forEach(renderMeal);
                 
-                costSummaryBar.style.display = 'block';
-            }
+                excursions.forEach(excursion => {
+                    if (excursion.category === 'adventure-thrill') {
+                        renderExcursion(excursion, adventureThrillExcursionsContainer);
+                    } else if (excursion.category === 'nature') {
+                        renderExcursion(excursion, natureExcursionsContainer);
+                    } else if (excursion.category === 'golf-recreation') {
+                        renderExcursion(excursion, golfRecreationExcursionsContainer);
+                    } else if (excursion.category === 'shows-entertainment') {
+                        renderExcursion(excursion, showsEntertainmentExcursionsContainer);
+                    } else if (excursion.category === 'indoor-fun') {
+                        renderExcursion(excursion, indoorFunExcursionsContainer);
+                    } else if (excursion.category === 'rentals') {
+                        renderExcursion(excursion, rentalsExcursionsContainer);
+                    }
+                });
 
-            function showMessage(message, className) {
-                messageBox.textContent = message;
-                messageBox.className = `mt-4 p-3 rounded-md ${className}`;
-                messageBox.style.display = 'block';
-                setTimeout(() => {
-                    messageBox.style.display = 'none';
-                }, 5000);
-            }
+                interestOnly.forEach(item => {
+                    if (item.category === 'desserts') {
+                        renderInterestOnly(item, dessertsExcursionsContainer);
+                    } else if (item.category === 'shopping') {
+                        renderInterestOnly(item, shoppingExcursionsContainer);
+                    }
+                });
+            };
+
+            // Function to update the summary panel
+            const updateTotal = () => {
+                let totalCost = 0;
+                let lodgingTotal = 0;
+                let extraBedTotal = 0;
+                let travelTotal = 0;
+                let mealTotal = 0;
+                let excursionTotal = 0;
+
+                // Lodging cost
+                if (lodgingCostSelect.value) {
+                    lodgingTotal = parseFloat(lodgingCostSelect.value);
+                }
+                if (extraBedCheckbox.checked) {
+                    extraBedTotal = 450;
+                }
+
+                // Travel cost
+                const adultCount = parseInt(adultTravelersInput.value) || 0;
+                const childCount = parseInt(childTravelersInput.value) || 0;
+                if (travelModeSelect.value === 'flying') {
+                    travelTotal = (adultCount + childCount) * 400;
+                } else if (travelModeSelect.value === 'driving') {
+                    const selectedOption = travelOriginSelect.options[travelOriginSelect.selectedIndex];
+                    const distance = parseFloat(selectedOption.getAttribute('data-distance')) || 0;
+                    // Round trip at 20 MPG, $3.00/gallon
+                    travelTotal = (distance * 2 / 20) * 3.00;
+                }
+
+                // Meal cost
+                const selectedMeals = document.querySelectorAll('#meals-list input[type="checkbox"]:checked');
+                selectedMeals.forEach(checkbox => {
+                    const meal = meals.find(m => m.id === checkbox.id);
+                    if (meal) {
+                        mealTotal += (adultCount * meal.cost.adult) + (childCount * meal.cost.child);
+                    }
+                });
+
+                // Excursion cost
+                excursions.forEach(excursion => {
+                    const adults = parseInt(document.getElementById(`${excursion.id}Adults`).value) || 0;
+                    const kids = parseInt(document.getElementById(`${excursion.id}Kids`).value) || 0;
+                    excursionTotal += (adults * excursion.adultPrice) + (kids * excursion.childPrice);
+                });
+
+                // Calculate total
+                totalCost = lodgingTotal + extraBedTotal + travelTotal + mealTotal + excursionTotal;
+
+                // Update summary display
+                summaryLodging.textContent = formatCurrency(lodgingTotal);
+                summaryExtraBed.textContent = formatCurrency(extraBedTotal);
+                summaryTravel.textContent = formatCurrency(travelTotal);
+                summaryMeals.textContent = formatCurrency(mealTotal);
+                summaryExcursions.textContent = formatCurrency(excursionTotal);
+                summaryTotalCost.textContent = formatCurrency(totalCost);
+
+                // Show the summary bar if any costs are calculated
+                if (totalCost > 0 || lodgingTotal > 0 || extraBedTotal > 0 || travelTotal > 0 || mealTotal > 0 || excursionTotal > 0) {
+                    costSummaryBar.style.display = 'block';
+                } else {
+                    costSummaryBar.style.display = 'none';
+                }
+            };
+
+            // Event listeners for all input changes
+            const addEventListeners = () => {
+                reunionForm.addEventListener('change', (e) => {
+                    // Toggle visibility of travel inputs
+                    if (e.target.id === 'travelMode') {
+                        if (e.target.value === 'driving') {
+                            travelOriginGroup.classList.remove('hidden');
+                            mileageDetailsGroup.classList.remove('hidden');
+                            airportGroup.classList.add('hidden');
+                            travelOriginSelect.setAttribute('required', 'true');
+                        } else if (e.target.value === 'flying') {
+                            travelOriginGroup.classList.add('hidden');
+                            mileageDetailsGroup.classList.add('hidden');
+                            airportGroup.classList.remove('hidden');
+                            travelOriginSelect.removeAttribute('required');
+                        } else {
+                             travelOriginGroup.classList.add('hidden');
+                            mileageDetailsGroup.classList.add('hidden');
+                            airportGroup.classList.add('hidden');
+                            travelOriginSelect.removeAttribute('required');
+                        }
+                    }
+                    updateTotal();
+                });
+                
+                reunionForm.addEventListener('input', (e) => {
+                    // Update for number inputs
+                    if (e.target.type === 'number') {
+                        updateTotal();
+                    }
+                });
+
+                // Add event listeners for the new +/- buttons
+                reunionForm.addEventListener('click', handleButtonClick);
+            };
+
+            // Handle form submission
+            reunionForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData();
+                const selectedMeals = [];
+                const selectedExcursions = [];
+                const selectedInterestOnly = [];
+                
+                // Append standard form fields to FormData
+                formData.append(googleFormEntryIds.familyName, document.getElementById('familyName').value);
+                formData.append(googleFormEntryIds.attendees, document.getElementById('attendees').value);
+                formData.append(googleFormEntryIds.lodgingCost, document.getElementById('lodgingCost').value);
+                formData.append(googleFormEntryIds.extraBed, document.getElementById('extraBed').checked ? 'Yes' : 'No');
+                formData.append(googleFormEntryIds.travelMode, document.getElementById('travelMode').value);
+                formData.append(googleFormEntryIds.travelOrigin, document.getElementById('travelOrigin').value);
+                formData.append(googleFormEntryIds.arrivalAirport, document.getElementById('arrivalAirport').value);
+                formData.append(googleFormEntryIds.adultTravelers, document.getElementById('adultTravelers').value);
+                formData.append(googleFormEntryIds.childTravelers, document.getElementById('childTravelers').value);
+
+                // Collect selected meals
+                document.querySelectorAll('#meals-list input[type="checkbox"]:checked').forEach(cb => {
+                    selectedMeals.push(meals.find(m => m.id === cb.id).name);
+                });
+                formData.append(googleFormEntryIds.selectedMeals, selectedMeals.join(', ') || 'None');
+
+                // Collect selected excursions (number inputs)
+                excursions.forEach(excursion => {
+                    const adults = parseInt(document.getElementById(`${excursion.id}Adults`).value) || 0;
+                    const kids = parseInt(document.getElementById(`${excursion.id}Kids`).value) || 0;
+                    if (adults > 0 || kids > 0) {
+                        selectedExcursions.push(`${excursion.name} (Adults: ${adults}, Kids: ${kids})`);
+                    }
+                });
+
+                // Collect selected interest-only items (checkboxes)
+                document.querySelectorAll('#desserts-excursions input[type="checkbox"]:checked, #shopping-excursions input[type="checkbox"]:checked').forEach(cb => {
+                    const item = interestOnly.find(i => i.id === cb.id);
+                    if (item) {
+                        selectedInterestOnly.push(item.name);
+                    }
+                });
+                if (selectedInterestOnly.length > 0) {
+                    selectedExcursions.push(`Interests: ${selectedInterestOnly.join(', ')}`);
+                }
+
+                formData.append(googleFormEntryIds.selectedExcursions, selectedExcursions.join('; ') || 'None');
+
+                // Add mileage for driving
+                if (travelModeSelect.value === 'driving') {
+                    const selectedOption = travelOriginSelect.options[travelOriginSelect.selectedIndex];
+                    const distance = parseFloat(selectedOption.getAttribute('data-distance')) || 0;
+                    formData.append(googleFormEntryIds.mileage, distance);
+                }
+
+                // Add total cost
+                const totalCostValue = summaryTotalCost.textContent;
+                formData.append(googleFormEntryIds.totalCost, totalCostValue);
+
+                try {
+                    // Use a no-cors fetch call, as is common for Google Form submissions
+                    const response = await fetch(googleFormUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: formData
+                    });
+                    
+                    showConfirmationPage();
+                    reunionForm.reset();
+                    updateTotal();
+
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    showMessage('There was an error submitting your form. Please try again.', 'bg-red-100 text-red-800');
+                }
+            });
 
             function showConfirmationPage() {
                 mainContent.classList.add('hidden');
@@ -455,118 +822,19 @@
                 }, 1000);
             }
 
-            // Initial render of excursions and meals
-            renderExcursions();
-            renderMeals();
-            updateSummary();
-            
-            // Event listeners
-            reunionForm.addEventListener('change', (e) => {
-                if (e.target.id === 'travelMode' || e.target.id === 'travelOrigin') {
-                    if (e.target.value === 'driving') {
-                        mileageDetailsGroup.classList.remove('hidden');
-                    } else {
-                        mileageDetailsGroup.classList.add('hidden');
-                    }
-                }
-                updateSummary();
-            });
+            function showMessage(message, className) {
+                messageBox.textContent = message;
+                messageBox.className = `mt-4 p-3 rounded-md ${className}`;
+                messageBox.style.display = 'block';
+                setTimeout(() => {
+                    messageBox.style.display = 'none';
+                }, 5000);
+            }
 
-            reunionForm.addEventListener('click', (e) => {
-                const target = e.target;
-                if (target.matches('button[data-action]')) {
-                    const id = target.dataset.id;
-                    const type = target.dataset.type; // 'adult' or 'child'
-                    const action = target.dataset.action; // 'increment' or 'decrement'
-                    
-                    const excursion = excursions.find(ex => ex.id === id);
-                    if (excursion) {
-                        const countKey = type === 'adult' ? 'adultCount' : 'childCount';
-                        if (action === 'increment') {
-                            excursion[countKey] = (excursion[countKey] || 0) + 1;
-                        } else if (action === 'decrement' && (excursion[countKey] || 0) > 0) {
-                            excursion[countKey]--;
-                        }
-                        document.getElementById(`${id}-${type}-count`).textContent = excursion[countKey];
-                        updateSummary();
-                    }
-                }
-            });
-
-            reunionForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const formData = new FormData();
-                const formElements = reunionForm.elements;
-                const selectedMeals = [];
-                const selectedExcursions = [];
-
-                // Collect all form data
-                const familyName = formElements.familyName.value;
-                const attendees = formElements.attendees.value;
-                const lodgingCost = formElements.lodgingCost.value;
-                const extraBed = formElements.extraBed.checked ? 'Yes' : 'No';
-                const travelMode = formElements.travelMode.value;
-                const travelOrigin = formElements.travelOrigin.value;
-                const arrivalAirport = formElements.arrivalAirport.value;
-                const adultTravelers = formElements.adultTravelers.value;
-                const childTravelers = formElements.childTravelers.value;
-                
-                // Get mileage for driving cost submission
-                let mileage = '';
-                if (travelMode === 'driving') {
-                    const selectedOrigin = travelOriginSelect.options[travelOriginSelect.selectedIndex];
-                    mileage = selectedOrigin.dataset.distance;
-                }
-                
-                // Collect selected meals
-                document.querySelectorAll('#meals-list input[type="checkbox"]:checked').forEach(checkbox => {
-                    const meal = meals.find(m => m.id === checkbox.id);
-                    selectedMeals.push(meal.name);
-                });
-                
-                // Collect selected excursions
-                excursions.forEach(excursion => {
-                    if ((excursion.adultCount || 0) > 0 || (excursion.childCount || 0) > 0) {
-                        selectedExcursions.push(`${excursion.name} (Adults: ${excursion.adultCount || 0}, Children: ${excursion.childCount || 0})`);
-                    }
-                });
-
-                // Get final total cost from the summary
-                const totalCost = document.getElementById('summary-total').textContent;
-
-                // Append data to form
-                formData.append(googleFormEntryIds.familyName, familyName);
-                formData.append(googleFormEntryIds.attendees, attendees);
-                formData.append(googleFormEntryIds.lodging, `${lodgingCost} (Extra Bed: ${extraBed})`);
-                formData.append(googleFormEntryIds.travelMode, travelMode);
-                formData.append(googleFormEntryIds.travelOrigin, travelOrigin);
-                formData.append(googleFormEntryIds.arrivalAirport, arrivalAirport);
-                formData.append(googleFormEntryIds.adultTravelers, adultTravelers);
-                formData.append(googleFormEntryIds.childTravelers, childTravelers);
-                if (travelMode === 'driving') {
-                    formData.append(googleFormEntryIds.mileage, mileage);
-                }
-                formData.append(googleFormEntryIds.selectedMeals, selectedMeals.join(', ') || 'None');
-                formData.append(googleFormEntryIds.selectedExcursions, selectedExcursions.join('; ') || 'None');
-                formData.append(googleFormEntryIds.totalCost, totalCost);
-
-                try {
-                    // Use a no-cors fetch call, as is common for Google Form submissions
-                    const response = await fetch(googleFormUrl, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: formData
-                    });
-                    
-                    showConfirmationPage();
-                    reunionForm.reset();
-
-                } catch (error) {
-                    console.error('Submission error:', error);
-                    showMessage('There was an error submitting your form. Please try again.', 'bg-red-100 text-red-800');
-                }
-            });
+            // Initial render and setup
+            renderFormItems();
+            addEventListeners();
+            updateTotal();
         });
     </script>
 </body>
