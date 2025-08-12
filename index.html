@@ -132,17 +132,23 @@
                                     <option value="driving">Driving (mileage-based)</option>
                                 </select>
                             </div>
-                            <div>
+                            <!-- Updated Travel Origin dropdown with data-distance -->
+                            <div id="travel-origin-group">
                                 <label for="travelOrigin" class="block text-sm font-medium text-gray-700">Travel Origin</label>
                                 <select id="travelOrigin" name="travelOrigin" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2">
                                     <option value="">Select</option>
-                                    <option value="Pocatello, ID">Pocatello, ID</option>
-                                    <option value="Idaho Falls, ID">Idaho Falls, ID</option>
-                                    <option value="Denver, CO">Denver, CO</option>
-                                    <option value="Peachtree City, GA">Peachtree City, GA</option>
-                                    <option value="Salt Lake City, UT">Salt Lake City, UT</option>
-                                    <option value="Springfield, MO">Springfield, MO</option>
+                                    <!-- Data-distance attributes for driving calculation -->
+                                    <option value="Pocatello, ID" data-distance="1350">Pocatello, ID (~1350 miles)</option>
+                                    <option value="Idaho Falls, ID" data-distance="1363">Idaho Falls, ID (~1363 miles)</option>
+                                    <option value="Denver, CO" data-distance="803">Denver, CO (~803 miles)</option>
+                                    <option value="Peachtree City, GA" data-distance="640">Peachtree City, GA (~640 miles)</option>
+                                    <option value="Salt Lake City, UT" data-distance="1286">Salt Lake City, UT (~1286 miles)</option>
+                                    <option value="Springfield, MO" data-distance="44">Springfield, MO (~44 miles)</option>
                                 </select>
+                            </div>
+                            <!-- New input for mileage that shows for driving mode. This is now calculated based on origin. -->
+                            <div id="mileage-details-group" class="hidden">
+                                <p class="text-sm text-gray-600">Driving cost is calculated based on a round trip at 20 MPG and $3.00/gallon.</p>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -233,6 +239,8 @@
             const confirmationCard = document.getElementById('confirmationCard');
             const messageBox = document.getElementById('messageBox');
             const costSummaryBar = document.querySelector('.cost-summary-bar');
+            const mileageDetailsGroup = document.getElementById('mileage-details-group');
+            const travelOriginSelect = document.getElementById('travelOrigin');
             
             // This is a placeholder URL and placeholder entry IDs.
             // YOU MUST create your own Google Form and replace this URL and the entry IDs below.
@@ -251,7 +259,7 @@
                 arrivalAirport: 'entry.321321321',
                 adultTravelers: 'entry.456456456',
                 childTravelers: 'entry.654654654',
-                // New IDs for the combined meal/excursion summaries
+                mileage: 'entry.789789789', // New entry ID for mileage
                 selectedMeals: 'entry.910111213',
                 selectedExcursions: 'entry.141516171',
                 totalCost: 'entry.181920212'
@@ -261,7 +269,7 @@
                 {
                     id: "silverDollarCity",
                     name: "Silver Dollar City",
-                    description: "A sprawling 1880s-style theme park with thrilling coasters, craft demonstrations, and live entertainment.",
+                    description: "An 1880s-style theme park with thrilling coasters and live entertainment.",
                     adultPrice: 89,
                     childPrice: 79,
                     adultCount: 0,
@@ -271,7 +279,7 @@
                 {
                     id: "bransonMountainCoaster",
                     name: "Branson Mountain Coaster",
-                    description: "Race through the Ozark hills on a self-controlled alpine coaster with dips and turns through the woods.",
+                    description: "Race through the Ozark hills on a self-controlled alpine coaster.",
                     adultPrice: 20,
                     childPrice: 20,
                     adultCount: 0,
@@ -281,7 +289,7 @@
                 {
                     id: "wolfeMountainZipline",
                     name: "Wolfe Mountain Zipline",
-                    description: "Soar through tree canopies on scenic ziplines and explore the Snowflex tubing hill in all seasons.",
+                    description: "Soar through tree canopies on scenic ziplines and explore the Snowflex tubing hill.",
                     adultPrice: 130,
                     childPrice: 130,
                     adultCount: 0,
@@ -291,7 +299,7 @@
                 {
                     id: "fritzsAdventure",
                     name: "Fritz’s Adventure",
-                    description: "Indoor adventure park with ropes courses, underground tunnels, climbing walls, and thrilling slides.",
+                    description: "Indoor adventure park with ropes courses, tunnels, and climbing walls.",
                     adultPrice: 35,
                     childPrice: 35,
                     adultCount: 0,
@@ -311,7 +319,7 @@
                 {
                     id: "bigfootFunPark",
                     name: "Bigfoot Fun Park",
-                    description: "Family fun with thrill rides, arcade games, and themed Bigfoot attractions including a gravity bomb.",
+                    description: "Family fun with thrill rides, arcade games, and themed Bigfoot attractions.",
                     adultPrice: 25,
                     childPrice: 25,
                     adultCount: 0,
@@ -321,37 +329,117 @@
                 {
                     id: "xtremeRacingCenter",
                     name: "Xtreme Racing Center",
-                    description: "Go full throttle on high-speed karts built for racing on a professionally designed outdoor track.",
+                    description: "Go full throttle on high-speed go-karts built for racing.",
                     adultPrice: 40,
                     childPrice: 40,
                     adultCount: 0,
                     childCount: 0,
                     img: "https://placehold.co/400x250/3d7d7d/ffffff?text=Xtreme+Racing+Center"
+                },
+                {
+                    id: "marinaBoatRental",
+                    name: "Marina Boat Rental",
+                    description: "Rent a pontoon or ski boat for a day on Table Rock Lake.",
+                    adultPrice: 150,
+                    childPrice: 150,
+                    adultCount: 0,
+                    childCount: 0,
+                    img: "https://placehold.co/400x250/1e88e5/ffffff?text=Marina+Boat+Rental"
+                },
+                {
+                    id: "aquariumAtTheBoardwalk",
+                    name: "Aquarium at the Boardwalk",
+                    description: "Explore the underwater world with thousands of sea creatures and interactive exhibits.",
+                    adultPrice: 35,
+                    childPrice: 25,
+                    adultCount: 0,
+                    childCount: 0,
+                    img: "https://placehold.co/400x250/0288d1/ffffff?text=Aquarium+at+the+Boardwalk"
+                },
+                {
+                    id: "titanicMuseum",
+                    name: "Titanic Museum",
+                    description: "A two-story museum shaped like the Titanic, featuring over 400 artifacts.",
+                    adultPrice: 38,
+                    childPrice: 15,
+                    adultCount: 0,
+                    childCount: 0,
+                    img: "https://placehold.co/400x250/333333/ffffff?text=Titanic+Museum"
+                },
+                {
+                    id: "ripleysBelieveItOrNot",
+                    name: "Ripley's Believe It or Not",
+                    description: "An odditorium full of peculiar artifacts and exhibits from around the world.",
+                    adultPrice: 28,
+                    childPrice: 18,
+                    adultCount: 0,
+                    childCount: 0,
+                    img: "https://placehold.co/400x250/990000/ffffff?text=Ripley's"
+                },
+                {
+                    id: "castlesOfBranson",
+                    name: "Castles of Branson",
+                    description: "A large adventure park with multiple attractions including laser tag and a ropes course.",
+                    adultPrice: 30,
+                    childPrice: 20,
+                    adultCount: 0,
+                    childCount: 0,
+                    img: "https://placehold.co/400x250/ff9900/ffffff?text=Castles+of+Branson"
+                },
+                {
+                    id: "beyondTheLens",
+                    name: "Beyond The Lens!",
+                    description: "A high-tech adventure with virtual reality rides and escape rooms.",
+                    adultPrice: 40,
+                    childPrice: 30,
+                    adultCount: 0,
+                    childCount: 0,
+                    img: "https://placehold.co/400x250/4CAF50/ffffff?text=Beyond+The+Lens"
+                },
+                {
+                    id: "piratesCoveAdventureGolf",
+                    name: "Pirate's Cove Adventure Golf",
+                    description: "Two 18-hole miniature golf courses with pirate-themed fun.",
+                    adultPrice: 15,
+                    childPrice: 12,
+                    adultCount: 0,
+                    childCount: 0,
+                    img: "https://placehold.co/400x250/1a73e8/ffffff?text=Pirate's+Cove"
+                },
+                {
+                    id: "whiteWaterBranson",
+                    name: "White Water",
+                    description: "A water park with slides, a wave pool, and a lazy river.",
+                    adultPrice: 45,
+                    childPrice: 35,
+                    adultCount: 0,
+                    childCount: 0,
+                    img: "https://placehold.co/400x250/00bcd4/ffffff?text=White+Water"
                 }
             ];
 
             const meals = [
-                { id: 'Sunday_Breakfast', name: 'Sunday - Breakfast' },
-                { id: 'Sunday_Lunch', name: 'Sunday - Lunch' },
-                { id: 'Sunday_Dinner', name: 'Sunday - Dinner: BBQ Night' },
-                { id: 'Monday_Breakfast', name: 'Monday - Breakfast' },
-                { id: 'Monday_Lunch', name: 'Monday - Lunch' },
-                { id: 'Monday_Dinner', name: 'Monday - Dinner: Taco Bar' },
-                { id: 'Tuesday_Breakfast', name: 'Tuesday - Breakfast' },
-                { id: 'Tuesday_Lunch', name: 'Tuesday - Lunch' },
-                { id: 'Tuesday_Dinner', name: 'Tuesday - Dinner: Burgers & Brats' },
-                { id: 'Wednesday_Breakfast', name: 'Wednesday - Breakfast' },
-                { id: 'Wednesday_Lunch', name: 'Wednesday - Lunch' },
-                { id: 'Wednesday_Dinner', name: 'Wednesday - Dinner: Pasta Night' },
-                { id: 'Thursday_Breakfast', name: 'Thursday - Breakfast' },
-                { id: 'Thursday_Lunch', name: 'Thursday - Lunch' },
-                { id: 'Thursday_Dinner', name: 'Thursday - Dinner: Pizza Night' },
-                { id: 'Friday_Breakfast', name: 'Friday - Breakfast' },
-                { id: 'Friday_Lunch', name: 'Friday - Lunch' },
-                { id: 'Friday_Dinner', name: 'Friday - Dinner: Leftovers / Free Night' },
-                { id: 'Saturday_Breakfast', name: 'Saturday - Breakfast' },
-                { id: 'Saturday_Lunch', name: 'Saturday - Lunch' },
-                { id: 'Saturday_Dinner', name: 'Saturday - Dinner: Sandwich Bar' }
+                { id: 'Sunday_Breakfast', name: 'Sunday - Breakfast', price: 12 },
+                { id: 'Sunday_Lunch', name: 'Sunday - Lunch', price: 15 },
+                { id: 'Sunday_Dinner', name: 'Sunday - Dinner: BBQ Night', price: 25 },
+                { id: 'Monday_Breakfast', name: 'Monday - Breakfast', price: 12 },
+                { id: 'Monday_Lunch', name: 'Monday - Lunch', price: 15 },
+                { id: 'Monday_Dinner', name: 'Monday - Dinner: Taco Bar', price: 20 },
+                { id: 'Tuesday_Breakfast', name: 'Tuesday - Breakfast', price: 12 },
+                { id: 'Tuesday_Lunch', name: 'Tuesday - Lunch', price: 15 },
+                { id: 'Tuesday_Dinner', name: 'Tuesday - Dinner: Burgers & Brats', price: 20 },
+                { id: 'Wednesday_Breakfast', name: 'Wednesday - Breakfast', price: 12 },
+                { id: 'Wednesday_Lunch', name: 'Wednesday - Lunch', price: 15 },
+                { id: 'Wednesday_Dinner', name: 'Wednesday - Dinner: Pasta Night', price: 20 },
+                { id: 'Thursday_Breakfast', name: 'Thursday - Breakfast', price: 12 },
+                { id: 'Thursday_Lunch', name: 'Thursday - Lunch', price: 15 },
+                { id: 'Thursday_Dinner', name: 'Thursday - Dinner: Pizza Night', price: 20 },
+                { id: 'Friday_Breakfast', name: 'Friday - Breakfast', price: 12 },
+                { id: 'Friday_Lunch', name: 'Friday - Lunch', price: 15 },
+                { id: 'Friday_Dinner', name: 'Friday - Dinner: Leftovers / Free Night', price: 0 },
+                { id: 'Saturday_Breakfast', name: 'Saturday - Breakfast', price: 12 },
+                { id: 'Saturday_Lunch', name: 'Saturday - Lunch', price: 15 },
+                { id: 'Saturday_Dinner', name: 'Saturday - Dinner: Sandwich Bar', price: 20 }
             ];
 
             function renderExcursions() {
@@ -392,8 +480,8 @@
                 const mealHTML = `
                     ${meals.map(meal => `
                         <div class="flex items-center">
-                            <input type="checkbox" id="${meal.id}" name="${meal.id}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                            <label for="${meal.id}" class="ml-2 block text-sm font-medium text-gray-700">${meal.name}</label>
+                            <input type="checkbox" id="${meal.id}" name="${meal.id}" data-price="${meal.price}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                            <label for="${meal.id}" class="ml-2 block text-sm font-medium text-gray-700">${meal.name} ($${meal.price.toFixed(2)} per person)</label>
                         </div>
                     `).join('')}
                 `;
@@ -410,12 +498,25 @@
                 let travelCost = 0;
                 if (travelMode === 'flying') {
                     travelCost = (adultTravelers + childTravelers) * 400;
+                    mileageDetailsGroup.classList.add('hidden');
+                    travelOriginSelect.classList.remove('hidden');
+                } else if (travelMode === 'driving') {
+                    // New driving cost logic
+                    const selectedOrigin = travelOriginSelect.options[travelOriginSelect.selectedIndex];
+                    const distance = parseFloat(selectedOrigin.dataset.distance) || 0;
+                    const mpg = 20;
+                    const gasPrice = 3.00;
+                    travelCost = (distance / mpg) * gasPrice * 2; // Round trip
+                    mileageDetailsGroup.classList.remove('hidden');
+                } else {
+                    mileageDetailsGroup.classList.add('hidden');
                 }
                 
                 let mealCost = 0;
-                const mealPricePerPerson = 15; // Placeholder price for simplicity
-                const selectedMealsCount = document.querySelectorAll('#meals-list input[type="checkbox"]:checked').length;
-                mealCost = selectedMealsCount * (adultTravelers + childTravelers) * mealPricePerPerson;
+                document.querySelectorAll('#meals-list input[type="checkbox"]:checked').forEach(checkbox => {
+                    const mealPrice = parseFloat(checkbox.dataset.price);
+                    mealCost += (adultTravelers + childTravelers) * mealPrice;
+                });
 
                 let excursionCost = 0;
                 excursions.forEach(excursion => {
@@ -469,7 +570,17 @@
             updateSummary();
             
             // Event listeners
-            reunionForm.addEventListener('change', updateSummary);
+            reunionForm.addEventListener('change', (e) => {
+                if (e.target.id === 'travelMode' || e.target.id === 'travelOrigin') {
+                    if (e.target.value === 'driving') {
+                        mileageDetailsGroup.classList.remove('hidden');
+                    } else {
+                        mileageDetailsGroup.classList.add('hidden');
+                    }
+                }
+                updateSummary();
+            });
+
             reunionForm.addEventListener('click', (e) => {
                 const target = e.target;
                 if (target.matches('button[data-action]')) {
@@ -510,9 +621,17 @@
                 const adultTravelers = formElements.adultTravelers.value;
                 const childTravelers = formElements.childTravelers.value;
                 
+                // Get mileage for driving cost submission
+                let mileage = '';
+                if (travelMode === 'driving') {
+                    const selectedOrigin = travelOriginSelect.options[travelOriginSelect.selectedIndex];
+                    mileage = selectedOrigin.dataset.distance;
+                }
+                
                 // Collect selected meals
                 document.querySelectorAll('#meals-list input[type="checkbox"]:checked').forEach(checkbox => {
-                    selectedMeals.push(checkbox.name.replace(/_/g, ' '));
+                    const meal = meals.find(m => m.id === checkbox.id);
+                    selectedMeals.push(`${meal.name} ($${meal.price.toFixed(2)}/person)`);
                 });
                 
                 // Collect selected excursions
@@ -534,6 +653,9 @@
                 formData.append(googleFormEntryIds.arrivalAirport, arrivalAirport);
                 formData.append(googleFormEntryIds.adultTravelers, adultTravelers);
                 formData.append(googleFormEntryIds.childTravelers, childTravelers);
+                if (travelMode === 'driving') {
+                    formData.append(googleFormEntryIds.mileage, mileage);
+                }
                 formData.append(googleFormEntryIds.selectedMeals, selectedMeals.join(', ') || 'None');
                 formData.append(googleFormEntryIds.selectedExcursions, selectedExcursions.join('; ') || 'None');
                 formData.append(googleFormEntryIds.totalCost, totalCost);
