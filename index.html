@@ -50,6 +50,21 @@
     padding: .75rem 1rem;
     margin: 1rem 0 .75rem;
   }
+<style>
+  .category-hero{
+    border:1px solid var(--line);
+    border-radius:.9rem;
+    overflow:hidden;
+    margin:.5rem 0 1rem;
+    background:#fff;
+  }
+  .category-hero img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    display:block;
+  }
+</style>
 
   /* Labels */
   #reunionForm label { font-weight: 600; color: var(--text); }
@@ -485,6 +500,20 @@
         jetSkiRentals: "https://www.stateparkmarina.com/boat-rentals",
         boatAndTubes: "https://www.stateparkmarina.com/boat-rentals"
     };
+<script>
+// Hero/banner image shown above each category grid
+const CATEGORY_IMAGES = {
+  "🎢 Adventure & Thrill": "images/sdc-hero.jpg",
+  "🏞️ Outdoors & Nature": "images/outdoors-hero.jpg",
+  "⛳ Golf & Recreation": "images/golf-hero.jpg",
+  "🎭 Shows & Entertainment": "images/shows-hero.jpg",
+  "🧠 Indoor Fun & Museums": "images/indoor-hero.jpg"
+  // Add more later if you make them:
+  // "🚤 Rentals (Shared Cost Estimate)": "images/rentals-hero.jpg",
+  // "🍦 Desserts & Treats (Interest Only)": "images/desserts-hero.jpg",
+  // "🛍️ Shopping & Free Time": "images/shopping-hero.jpg"
+};
+</script>
 
             const interestItems = [
                 { id: 'andysCustard', name: "Andy’s Frozen Custard", category: "🍦 Desserts & Treats (Interest Only)" },
