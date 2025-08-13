@@ -819,6 +819,29 @@
             renderContent();
             updateSummary();
             handleTravelModeChange();
+      // ---- Meals bulk-select controls ----
+const selectAllMealsBtn = document.getElementById('select-all-meals');
+const clearAllMealsBtn  = document.getElementById('clear-all-meals');
+
+function setAllMealsChecked(checked) {
+  // grab ALL meal checkboxes
+  const boxes = document.querySelectorAll('input[name="meal"]');
+  boxes.forEach(cb => {
+    cb.checked = checked;
+    // fire a bubbling change event so the form-level change listener runs
+    cb.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  // ensure totals refresh
+  if (typeof updateSummary === 'function') updateSummary();
+}
+
+if (selectAllMealsBtn) {
+  selectAllMealsBtn.addEventListener('click', () => setAllMealsChecked(true));
+}
+if (clearAllMealsBtn) {
+  clearAllMealsBtn.addEventListener('click', () => setAllMealsChecked(false));
+}
+
         });
     </script>
 </body>
