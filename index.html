@@ -379,19 +379,19 @@
             const mileageDetailsGroup = document.getElementById('mileage-details-group');
             const travelOriginSelect = document.getElementById('travelOrigin');
             
-            // Placeholder for Google Form integration. Replace with your actual URL and entry IDs.
-const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScUApKt1GW2q3qqD9M6Y4EEvRlWFJ9eRbhUoGuIQXrO1RnmIA/formResponse";
-         const googleFormEntryIds = {
-  familyName:        "entry.410693715",   // test1
-  attendees:         "entry.1402442371",  // test2
-  lodging:           "entry.361829150",   // test3
-  travelInfo:        "entry.246009107",   // test4
-  travelers:         "entry.564596700",   // test5
-  selectedMeals:     "entry.419259284",   // test6
-  selectedExcursions:"entry.1987430049",  // test7
-  interestItems:     "entry.601295490",   // test8
-  totalCost:         "entry.202808949"    // test9
-};
+            // Google Form integration (your working URL + IDs)
+            const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScUApKt1GW2q3qqD9M6Y4EEvRlWFJ9eRbhUoGuIQXrO1RnmIA/formResponse";
+            const googleFormEntryIds = {
+              familyName:        "entry.410693715",
+              attendees:         "entry.1402442371",
+              lodging:           "entry.361829150",
+              travelInfo:        "entry.246009107",
+              travelers:         "entry.564596700",
+              selectedMeals:     "entry.419259284",
+              selectedExcursions:"entry.1987430049",
+              interestItems:     "entry.601295490",
+              totalCost:         "entry.202808949"
+            };
             
             // --- DATA ---
             const excursions = [
@@ -438,6 +438,40 @@ const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScUApKt1GW2q3qqD
                 { id: "jetSkiRentals", name: "Jet Ski Rentals", description: "Ride the waves on Table Rock Lake with fast and fun jet ski rentals.", adultPrice: 100, childPrice: 100, category: "🚤 Rentals (Shared Cost Estimate)" },
                 { id: "boatAndTubes", name: "Boat and Tubes", description: "Rent a pontoon or ski boat for tubing, cruising, or relaxing.", adultPrice: 125, childPrice: 125, category: "🚤 Rentals (Shared Cost Estimate)" },
             ];
+
+    const EXCURSION_LINKS = {
+        silverDollarCity: "https://www.silverdollarcity.com/",
+        bransonMountainCoaster: "https://www.bransonalpinemountaincoaster.com/",
+        wolfeMountainZipline: "https://www.wolfemountainbranson.com/",
+        fritzsAdventure: "https://www.fritzsadventure.com/",
+        shepherdHillsAdventurePark: "https://theshepherdofthehills.com/adventure-park/",
+        bigfootFunPark: "https://www.bigfootfunpark.com/",
+        xtremeRacingCenter: "https://www.xtremeracingcenterbranson.com/",
+        dogwoodCanyonNaturePark: "https://dogwoodcanyon.org/",
+        topOfTheRockGolfCartTour: "https://bigcedar.com/activity/lost-canyon-cave-nature-trail/",
+        tableRockLakeBoating: "https://www.stateparkmarina.com/",
+        ozarkMountainBiking: "https://howlerbikepark.com/",
+        shepherdHillsPettingZoo: "https://theshepherdofthehills.com/the-park/",
+        bigCedarLodgeGolf: "https://bigcedar.com/golf/",
+        miniGolf: "https://www.piratescove.net/locations/missouri/branson/",
+        bransonTracksArcade: "https://www.bransontracks.com/",
+        familyBowlingNight: "https://www.bowlandybs.com/branson",
+        dollyPartonStampede: "https://dpstampede.com/branson",
+        sightSoundTheatre: "https://www.sight-sound.com/branson",
+        showboatBransonBelle: "https://www.silverdollarcity.com/showboat-branson/",
+        rezaEdgeOfIllusion: "https://rezalive.com/",
+        clayCooperCountryExpress: "https://www.claycoopertheatre.com/clay-coopers-country-express",
+        presleysCountryJubilee: "https://www.presleys.com/",
+        theHaygoods: "https://thehaygoods.com/",
+        wonderWorks: "https://www.wonderworksonline.com/branson/",
+        aquariumAtTheBoardwalk: "https://www.aquariumattheboardwalk.com/",
+        titanicMuseum: "https://titanicattraction.com/branson",
+        butterflyPalace: "https://thebutterflypalace.com/",
+        ripleysBelieveItOrNot: "https://www.ripleys.com/attractions/ripleys-believe-it-or-not-branson",
+        hollywoodWaxMuseum: "https://www.hollywoodwaxentertainment.com/branson-mo-attractions/hollywood-wax-museum/",
+        jetSkiRentals: "https://www.stateparkmarina.com/boat-rentals",
+        boatAndTubes: "https://www.stateparkmarina.com/boat-rentals"
+    };
 
             const interestItems = [
                 { id: 'andysCustard', name: "Andy’s Frozen Custard", category: "🍦 Desserts & Treats (Interest Only)" },
@@ -509,7 +543,7 @@ const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScUApKt1GW2q3qqD
                         grid.innerHTML = pricedItemsInCategory.map(excursion => `
                             <div class="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col justify-between transition-shadow hover:shadow-lg">
                                 <div>
-                                    <h4 class="text-lg font-bold">${excursion.name}</h4>
+                                    <h4 class="text-lg font-bold">${EXCURSION_LINKS[excursion.id] ? `<a href="${EXCURSION_LINKS[excursion.id]}" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">${excursion.name}</a>` : excursion.name}</h4>
                                     <p class="text-sm text-gray-600 mt-1">${excursion.description}</p>
                                     <div class="mt-3 text-sm font-semibold text-gray-700">
                                         Adults: $${excursion.adultPrice} | Children: $${excursion.childPrice}
@@ -556,74 +590,76 @@ const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScUApKt1GW2q3qqD
                 });
             }
 
-
+            /* --------- NEW: Meals as day cards (purely visual, IDs/values unchanged) --------- */
             function renderMeals() {
-  const mealsList = document.getElementById('meals-list');
+                const mealsList = document.getElementById('meals-list');
 
-  // Build map of Day -> meals (keeps your original ids/names/values)
-  const dayOrder = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  const byDay = {};
-  meals.forEach(m => {
-    const parts = m.name.split(' - ');
-    const day = parts[0] || '';
-    const rest = parts.slice(1).join(' - ') || '';
+                // Build a Day -> meals map (Breakfast, Lunch, Dinner: Menu)
+                const dayOrder = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                const byDay = {};
+                meals.forEach(m => {
+                    const parts = m.name.split(' - ');
+                    const day = parts[0] || '';
+                    const rest = parts.slice(1).join(' - ') || '';
 
-    let type = rest;        // "Breakfast", "Lunch", or "Dinner: Menu"
-    let dinnerMenu = '';
+                    let type = rest;
+                    let dinnerMenu = '';
 
-    if (rest.toLowerCase().startsWith('dinner')) {
-      type = 'Dinner';
-      const colon = rest.indexOf(':');
-      if (colon !== -1) dinnerMenu = rest.slice(colon + 1).trim();
-    }
+                    if (rest.toLowerCase().startsWith('dinner')) {
+                        type = 'Dinner';
+                        const colon = rest.indexOf(':');
+                        if (colon !== -1) dinnerMenu = rest.slice(colon + 1).trim();
+                    }
 
-    if (!byDay[day]) byDay[day] = [];
-    byDay[day].push({
-      id: m.id,
-      name: m.name,
-      type,
-      dinnerMenu
-    });
-  });
+                    if (!byDay[day]) byDay[day] = [];
+                    byDay[day].push({
+                        id: m.id,
+                        name: m.name,
+                        type,
+                        dinnerMenu
+                    });
+                });
 
-  const mealRow = (item) => {
-    const extra = (item.type === 'Dinner' && item.dinnerMenu)
-      ? ` — <span class="text-gray-500">${item.dinnerMenu}</span>`
-      : '';
-    // IMPORTANT: preserve id/name/value exactly so your logic & Google Form mapping keep working
-    return `
-      <label for="${item.id}" class="flex items-center justify-between">
-        <div class="flex items-center">
-          <input type="checkbox" id="${item.id}" name="meal" value="${item.name}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-          <span class="ml-2 text-sm font-medium text-gray-700">${item.type}${extra}</span>
-        </div>
-      </label>
-    `;
-  };
+                const mealRow = (item) => {
+                    const extra = (item.type === 'Dinner' && item.dinnerMenu)
+                        ? ` — <span class="text-gray-500">${item.dinnerMenu}</span>`
+                        : '';
+                    // IMPORTANT: preserve id/name/value exactly (logic + Google Form stay intact)
+                    return `
+                        <label for="${item.id}" class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="${item.id}" name="meal" value="${item.name}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                <span class="ml-2 text-sm font-medium text-gray-700">${item.type}${extra}</span>
+                            </div>
+                        </label>
+                    `;
+                };
 
-  const cards = dayOrder
-    .filter(d => byDay[d])
-    .map(day => {
-      const items = byDay[day] || [];
-      const order = ['Breakfast','Lunch','Dinner'];
-      const ordered = order.map(t => items.find(i => i.type === t)).filter(Boolean);
-      return `
-        <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-          <h4 class="text-lg font-bold mb-3">${day}</h4>
-          <div class="space-y-2">
-            ${ordered.map(mealRow).join('')}
-          </div>
-        </div>
-      `;
-    })
-    .join('');
+                const cards = dayOrder
+                    .filter(d => byDay[d])
+                    .map(day => {
+                        const items = byDay[day] || [];
+                        const order = ['Breakfast','Lunch','Dinner'];
+                        const ordered = order.map(t => items.find(i => i.type === t)).filter(Boolean);
+                        return `
+                            <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                                <h4 class="text-lg font-bold mb-3">${day}</h4>
+                                <div class="space-y-2">
+                                    ${ordered.map(mealRow).join('')}
+                                </div>
+                            </div>
+                        `;
+                    })
+                    .join('');
 
-  mealsList.innerHTML = `
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      ${cards}
-    </div>
-  `;
-}
+                mealsList.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${cards}
+                    </div>
+                `;
+            }
+            /* ------------------------------------------------------------------------------- */
+
             // --- CALCULATION & UI UPDATE ---
             function updateSummary() {
                 const lodgingCost = parseFloat(document.getElementById('lodgingCost').value) || 0;
@@ -748,9 +784,7 @@ const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScUApKt1GW2q3qqD
                 formData.append(googleFormEntryIds.totalCost, document.getElementById('summary-total').textContent);
                 
                 try {
-                    // This fetch call is a placeholder. It will not work without a valid Google Form URL.
-                    // To make it work, create a Google Form and replace the placeholder URL and entry IDs.
-                    const response = await fetch(googleFormUrl, {
+                    await fetch(googleFormUrl, {
                         method: 'POST',
                         mode: 'no-cors',
                         body: formData
