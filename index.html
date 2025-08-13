@@ -558,17 +558,72 @@ const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLScUApKt1GW2q3qqD
 
 
             function renderMeals() {
-                const mealsList = document.getElementById('meals-list');
-                mealsList.innerHTML = `
-                    ${meals.map(meal => `
-                        <div class="flex items-center">
-                            <input type="checkbox" id="${meal.id}" name="meal" value="${meal.name}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                            <label for="${meal.id}" class="ml-2 block text-sm font-medium text-gray-700">${meal.name}</label>
-                        </div>
-                    `).join('')}
-                `;
-            }
+  const mealsList = document.getElementById('meals-list');
 
+  // Build map of Day -> meals (keeps your original ids/names/values)
+  const dayOrder = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const byDay = {};
+  meals.forEach(m => {
+    const parts = m.name.split(' - ');
+    const day = parts[0] || '';
+    const rest = parts.slice(1).join(' - ') || '';
+
+    let type = rest;        // "Breakfast", "Lunch", or "Dinner: Menu"
+    let dinnerMenu = '';
+
+    if (rest.toLowerCase().startsWith('dinner')) {
+      type = 'Dinner';
+      const colon = rest.indexOf(':');
+      if (colon !== -1) dinnerMenu = rest.slice(colon + 1).trim();
+    }
+
+    if (!byDay[day]) byDay[day] = [];
+    byDay[day].push({
+      id: m.id,
+      name: m.name,
+      type,
+      dinnerMenu
+    });
+  });
+
+  const mealRow = (item) => {
+    const extra = (item.type === 'Dinner' && item.dinnerMenu)
+      ? ` — <span class="text-gray-500">${item.dinnerMenu}</span>`
+      : '';
+    // IMPORTANT: preserve id/name/value exactly so your logic & Google Form mapping keep working
+    return `
+      <label for="${item.id}" class="flex items-center justify-between">
+        <div class="flex items-center">
+          <input type="checkbox" id="${item.id}" name="meal" value="${item.name}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+          <span class="ml-2 text-sm font-medium text-gray-700">${item.type}${extra}</span>
+        </div>
+      </label>
+    `;
+  };
+
+  const cards = dayOrder
+    .filter(d => byDay[d])
+    .map(day => {
+      const items = byDay[day] || [];
+      const order = ['Breakfast','Lunch','Dinner'];
+      const ordered = order.map(t => items.find(i => i.type === t)).filter(Boolean);
+      return `
+        <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <h4 class="text-lg font-bold mb-3">${day}</h4>
+          <div class="space-y-2">
+            ${ordered.map(mealRow).join('')}
+          </div>
+        </div>
+      `;
+    })
+    .join('');
+
+  mealsList.innerHTML = `
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      ${cards}
+    </div>
+  `;
+}
             // --- CALCULATION & UI UPDATE ---
             function updateSummary() {
                 const lodgingCost = parseFloat(document.getElementById('lodgingCost').value) || 0;
