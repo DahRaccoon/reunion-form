@@ -314,10 +314,23 @@
                     </section>
 
                     <section>
-                         <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">🍽️ Meal Planning</h2>
-                        <p class="text-gray-600 my-4">Select the meals your family will attend. The cost is calculated based on a base rate of $8 per meal for each adult, and $4 per meal for each child in your family.</p>
-                        <div id="meals-list" class="space-y-4">
-                            </div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">🍽️ Meal Planning</h2>
+<p class="text-gray-600 my-4">Select the meals your family will attend. The cost is calculated based on a base rate of $8 per meal for each adult, and $4 per meal for each child in your family.</p>
+
+<!-- New: bulk actions (purely UI; does not change IDs/values) -->
+<div class="flex flex-wrap items-center gap-3 mb-4">
+  <button type="button" id="select-all-meals"
+    class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+    Select All Meals
+  </button>
+  <button type="button" id="clear-all-meals"
+    class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
+    Clear All
+  </button>
+</div>
+
+<div id="meals-list" class="space-y-4"></div>
+
                     </section>
 
                     <section>
