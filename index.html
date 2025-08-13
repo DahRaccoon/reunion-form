@@ -1,6 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style id="reunionTheme">
+  /* ==== Theme tokens (easy to tweak later) ==== */
+  #reunionForm {
+    --primary: #0ea5e9;       /* blue */
+    --primary-600: #0284c7;   /* hover */
+    --text: #0f172a;          /* slate-900 */
+    --muted: #475569;         /* slate-600 */
+    --bg: #ffffff;
+    --soft: #f8fafc;          /* light card/bg */
+    --line: #e2e8f0;          /* borders */
+    --ring: color-mix(in hsl, var(--primary) 22%, transparent);
+  }
+
+  /* ==== Page/frame polish ==== */
+  body { background: #f7fafc; color: var(--text); }
+  .container { max-width: 1060px; }
+
+  /* ==== Form shell ==== */
+  #reunionForm {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(2, 132, 199, 0.06);
+    padding: 1.25rem;
+  }
+
+  /* Headings */
+  #reunionForm h1, #reunionForm h2, #reunionForm h3 {
+    line-height: 1.2;
+    letter-spacing: -.01em;
+  }
+  #reunionForm h1 { font-weight: 800; }
+  #reunionForm h2 {
+    font-weight: 700;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: .45rem;
+    margin-bottom: .75rem;
+  }
+  #reunionForm h3 { color: var(--muted); font-weight: 700; }
+
+  /* Optional banner treatment for section headers (uses your existing <h2>) */
+  #reunionForm section > h2 {
+    position: relative;
+    background: linear-gradient(90deg, color-mix(in hsl, var(--primary) 12%, #fff), #fff);
+    border: 1px solid var(--line);
+    border-radius: .9rem;
+    padding: .75rem 1rem;
+    margin: 1rem 0 .75rem;
+  }
+
+  /* Labels */
+  #reunionForm label { font-weight: 600; color: var(--text); }
+
+  /* Inputs / selects / textareas */
+  #reunionForm input[type="text"],
+  #reunionForm input[type="number"],
+  #reunionForm input[type="email"],
+  #reunionForm select,
+  #reunionForm textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: .8rem;
+    padding: .7rem .9rem;
+    font-size: .95rem;
+    background: #fff;
+    color: var(--text);
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  #reunionForm textarea { min-height: 110px; }
+  #reunionForm input:focus,
+  #reunionForm select:focus,
+  #reunionForm textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--ring);
+  }
+
+  /* Checkbox/radio polish */
+  #reunionForm input[type="checkbox"],
+  #reunionForm input[type="radio"] {
+    width: 1.05rem; height: 1.05rem;
+    accent-color: var(--primary);
+  }
+
+  /* Make your meals & interest lists auto-grid neatly without HTML changes */
+  #meals-list,
+  #excursions-container .space-y-2,
+  #excursions-container .grid {
+    row-gap: .75rem;
+  }
+  #meals-list > div,
+  #excursions-container .space-y-2 > div {
+    display: flex; align-items: center;
+  }
+
+  /* Excursion cards (your generated cards) */
+  #excursions-container .bg-gray-50 {
+    background: var(--soft) !important;
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    transition: box-shadow .18s ease, transform .06s ease;
+  }
+  #excursions-container .bg-gray-50:hover {
+    box-shadow: 0 16px 40px rgba(2,132,199,.08);
+    transform: translateY(-1px);
+  }
+  #excursions-container .w-8.h-8 {
+    background: #e5eef8 !important;
+    color: #0b355a !important;
+    transition: background .15s ease, transform .05s ease;
+  }
+  #excursions-container .w-8.h-8:hover { background: #d6e6f5 !important; }
+  #excursions-container .w-8.h-8:active { transform: translateY(1px); }
+
+  /* Summary bar (right sticky card) */
+  .cost-summary-bar {
+    background: #0f172a; /* deep slate */
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 14px;
+    box-shadow: 0 14px 40px rgba(15,23,42,.25);
+  }
+  .cost-summary-bar h3 { color: #fff; }
+  .cost-summary-bar hr { border-color: rgba(255,255,255,.18); }
+  .cost-summary-bar .text-gray-200 { color: rgba(255,255,255,.75) !important; }
+  @media (max-width: 1024px) {
+    .cost-summary-bar { box-shadow: none; }
+  }
+
+  /* Submit button (keeps your existing classes, just better feel) */
+  #reunionForm [type="submit"] {
+    background: var(--primary) !important;
+    border-radius: .9rem !important;
+    font-weight: 800 !important;
+    letter-spacing: .01em;
+    box-shadow: 0 14px 28px rgba(2,132,199,.22);
+    transition: background .15s ease, transform .05s ease, box-shadow .15s ease !important;
+  }
+  #reunionForm [type="submit"]:hover {
+    background: var(--primary-600) !important;
+    box-shadow: 0 18px 44px rgba(2,132,199,.26);
+  }
+  #reunionForm [type="submit"]:active { transform: translateY(1px); }
+
+  /* Confirmation overlay card glow */
+  #confirmationCard {
+    box-shadow: 0 30px 60px rgba(34, 197, 94, .25);
+  }
+
+  /* Gentle spacing tweaks */
+  #reunionForm section { scroll-margin-top: 80px; }
+  #reunionForm .space-y-8 > * + * { margin-top: 1.25rem; }
+</style>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Family Reunion Form</title>
