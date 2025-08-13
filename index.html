@@ -256,7 +256,9 @@
                 { id: "tableRockLakeBoating", name: "Table Rock Lake & Boating", description: "Swimming, fishing, or boating on the crystal-clear lake.", adultPrice: 10, childPrice: 10, category: "🏞️ Outdoors & Nature" },
                 { id: "ozarkMountainBiking", name: "Ozark Mountain Biking", description: "Tackle scenic mountain trails suited for all skill levels.", adultPrice: 20, childPrice: 20, category: "🏞️ Outdoors & Nature" },
                 { id: "shepherdHillsPettingZoo", name: "Shepherd of the Hills Petting Zoo", description: "Feed goats, llamas, and other animals at this charming farm.", adultPrice: 10, childPrice: 10, category: "🏞️ Outdoors & Nature" },
-                
+                { id: "henningConservation", name: "Henning Conservation Area", description: "Free scenic hiking trails through wooded Ozark hills and a historic fire tower overlook.", adultPrice: 0, childPrice: 0, category: "🏞️ Outdoors & Nature" },
+                { id: "lakesideForest", name: "Lakeside Forest Wilderness Area", description: "Nature preserve with waterfalls, stone steps, and panoramic views of Lake Taneycomo.", adultPrice: 0, childPrice: 0, category: "🏞️ Outdoors & Nature" },
+
                 // Golf & Recreation
                 { id: "bigCedarLodgeGolf", name: "Big Cedar Lodge Golf", description: "Play on world-class courses like Payne’s Valley.", adultPrice: 300, childPrice: 300, category: "⛳ Golf & Recreation" },
                 { id: "miniGolf", name: "Mini Golf", description: "Light-hearted competition at whimsical mini golf courses.", adultPrice: 15, childPrice: 15, category: "⛳ Golf & Recreation" },
@@ -292,10 +294,6 @@
                 { id: 'parlorDoughnuts', name: "Parlor Doughnuts", category: "🍦 Desserts & Treats (Interest Only)" },
                 { id: 'sugarLeafBakery', name: "Sugar Leaf Bakery & Café", category: "🍦 Desserts & Treats (Interest Only)" },
                 { id: 'melsHardLuckDiner', name: "Mel’s Hard Luck Diner", category: "🍦 Desserts & Treats (Interest Only)" },
-                
-                { id: 'henningConservation', name: "Henning Conservation Area (Free Hiking)", category: "🏞️ Outdoors & Nature" },
-                { id: 'lakesideForest', name: "Lakeside Forest Wilderness Area (Free Hiking)", category: "🏞️ Outdoors & Nature" },
-
                 { id: 'tangerOutlets', name: "Outlet Mall Shopping Trip (Tanger Outlets)", category: "🛍️ Shopping & Free Time" },
                 { id: 'bransonLanding', name: "Branson Landing (Free)", category: "🛍️ Shopping & Free Time" },
             ];
@@ -318,26 +316,12 @@
                 const allItems = [...excursions, ...interestItems];
                 const categories = [...new Set(allItems.map(item => item.category))];
                 
-                // Define the desired order of categories
                 const categoryOrder = [
-                    "🎢 Adventure & Thrill",
-                    "🏞️ Outdoors & Nature",
-                    "⛳ Golf & Recreation",
-                    "🎭 Shows & Entertainment",
-                    "🧠 Indoor Fun & Museums",
-                    "🚤 Rentals (Shared Cost Estimate)",
-                    "🍦 Desserts & Treats (Interest Only)",
-                    "🛍️ Shopping & Free Time"
+                    "🎢 Adventure & Thrill", "🏞️ Outdoors & Nature", "⛳ Golf & Recreation", "🎭 Shows & Entertainment",
+                    "🧠 Indoor Fun & Museums", "🚤 Rentals (Shared Cost Estimate)", "🍦 Desserts & Treats (Interest Only)", "🛍️ Shopping & Free Time"
                 ];
                 
-                // Sort the found categories based on the desired order
-                const sortedCategories = categories.sort((a, b) => {
-                    const indexA = categoryOrder.indexOf(a);
-                    const indexB = categoryOrder.indexOf(b);
-                    if (indexA === -1) return 1; // Put categories not in the order list at the end
-                    if (indexB === -1) return -1;
-                    return indexA - indexB;
-                });
+                const sortedCategories = categories.sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
 
                 sortedCategories.forEach(category => {
                     const categoryWrapper = document.createElement('div');
@@ -347,223 +331,34 @@
                     categoryTitle.textContent = category;
                     categoryWrapper.appendChild(categoryTitle);
 
-                    // Handle priced excursions
+                    const grid = document.createElement('div');
+                    grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+
+                    // Priced and Free Excursions (now handled together)
                     const pricedItemsInCategory = excursions.filter(ex => ex.category === category);
                     if (pricedItemsInCategory.length > 0) {
-                        const grid = document.createElement('div');
-                        grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
-                        grid.innerHTML = pricedItemsInCategory.map(excursion => `
+                        grid.innerHTML += pricedItemsInCategory.map(excursion => {
+                            const isPriced = excursion.adultPrice > 0 || excursion.childPrice > 0;
+                            return `
                             <div class="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col justify-between transition-shadow hover:shadow-lg">
                                 <div>
                                     <h4 class="text-lg font-bold">${excursion.name}</h4>
                                     <p class="text-sm text-gray-600 mt-1">${excursion.description}</p>
-                                    <div class="mt-3 text-sm font-semibold text-gray-700">
-                                        Adults: $${excursion.adultPrice} | Children: $${excursion.childPrice}
-                                    </div>
-                                </div>
-                                <div class="mt-4 space-y-3">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-medium">Adults</span>
-                                        <div class="flex items-center space-x-2">
-                                            <button type="button" data-id="${excursion.id}" data-type="adult" data-action="decrement" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">-</button>
-                                            <span id="${excursion.id}-adult-count" class="font-bold text-lg w-6 text-center">${excursion.adultCount || 0}</span>
-                                            <button type="button" data-id="${excursion.id}" data-type="adult" data-action="increment" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">+</button>
+                                    ${isPriced ? `
+                                        <div class="mt-3 text-sm font-semibold text-gray-700">
+                                            Adults: $${excursion.adultPrice} | Children: $${excursion.childPrice}
                                         </div>
-                                    </div>
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-medium">Children</span>
-                                        <div class="flex items-center space-x-2">
-                                            <button type="button" data-id="${excursion.id}" data-type="child" data-action="decrement" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">-</button>
-                                            <span id="${excursion.id}-child-count" class="font-bold text-lg w-6 text-center">${excursion.childCount || 0}</span>
-                                            <button type="button" data-id="${excursion.id}" data-type="child" data-action="increment" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">+</button>
+                                    ` : `
+                                        <div class="mt-3 text-sm font-semibold text-green-600">
+                                            Free to Attend
                                         </div>
-                                    </div>
+                                    `}
                                 </div>
-                            </div>
-                        `).join('');
-                        categoryWrapper.appendChild(grid);
-                    }
-
-                    // Handle interest-only items
-                    const interestItemsInCategory = interestItems.filter(item => item.category === category);
-                    if (interestItemsInCategory.length > 0) {
-                        const list = document.createElement('div');
-                        list.className = 'space-y-2 pt-2';
-                        list.innerHTML = interestItemsInCategory.map(item => `
-                            <div class="flex items-center">
-                                <input type="checkbox" id="${item.id}" name="interest" value="${item.name}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                                <label for="${item.id}" class="ml-2 block text-sm font-medium text-gray-700">${item.name}</label>
-                            </div>
-                        `).join('');
-                        categoryWrapper.appendChild(list);
-                    }
-                    
-                    container.appendChild(categoryWrapper);
-                });
-            }
-
-
-            function renderMeals() {
-                const mealsList = document.getElementById('meals-list');
-                mealsList.innerHTML = `
-                    ${meals.map(meal => `
-                        <div class="flex items-center">
-                            <input type="checkbox" id="${meal.id}" name="meal" value="${meal.name}" class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                            <label for="${meal.id}" class="ml-2 block text-sm font-medium text-gray-700">${meal.name}</label>
-                        </div>
-                    `).join('')}
-                `;
-            }
-
-            // --- CALCULATION & UI UPDATE ---
-            function updateSummary() {
-                const lodgingCost = parseFloat(document.getElementById('lodgingCost').value) || 0;
-                const extraBedCost = document.getElementById('extraBed').checked ? 450 : 0;
-                const travelMode = document.getElementById('travelMode').value;
-                const adultTravelers = parseInt(document.getElementById('adultTravelers').value) || 1;
-                const childTravelers = parseInt(document.getElementById('childTravelers').value) || 0;
-                
-                let travelCost = 0;
-                if (travelMode === 'flying') {
-                    travelCost = (adultTravelers + childTravelers) * 400;
-                } else if (travelMode === 'driving') {
-                    const selectedOrigin = travelOriginSelect.options[travelOriginSelect.selectedIndex];
-                    const distance = parseFloat(selectedOrigin.dataset.distance) || 0;
-                    travelCost = (distance / 20) * 3.00 * 2; // Round trip calculation
-                }
-                
-                let mealCost = 0;
-                const adultMealCost = 8;
-                const childMealCost = 4;
-                document.querySelectorAll('#meals-list input[type="checkbox"]:checked').forEach(() => {
-                    mealCost += (adultTravelers * adultMealCost) + (childTravelers * childMealCost);
-                });
-
-                let excursionCost = 0;
-                excursions.forEach(excursion => {
-                    excursionCost += ((excursion.adultCount || 0) * excursion.adultPrice) + ((excursion.childCount || 0) * excursion.childPrice);
-                });
-
-                const totalCost = lodgingCost + extraBedCost + travelCost + mealCost + excursionCost;
-
-                document.getElementById('summary-lodging').textContent = `$${lodgingCost.toFixed(2)}`;
-                document.getElementById('summary-extra-bed').textContent = `$${extraBedCost.toFixed(2)}`;
-                document.getElementById('summary-travel').textContent = `$${travelCost.toFixed(2)}`;
-                document.getElementById('summary-meals').textContent = `$${mealCost.toFixed(2)}`;
-                document.getElementById('summary-excursions').textContent = `$${excursionCost.toFixed(2)}`;
-                document.getElementById('summary-total').textContent = `$${totalCost.toFixed(2)}`;
-                
-                if (lodgingCost > 0 || totalCost > 0) {
-                     costSummaryBar.style.display = 'block';
-                }
-            }
-            
-            function handleTravelModeChange() {
-                mileageDetailsGroup.classList.toggle('hidden', document.getElementById('travelMode').value !== 'driving');
-                updateSummary();
-            }
-
-            function showConfirmationPage() {
-                mainContent.classList.add('hidden');
-                confirmationPage.classList.remove('hidden');
-                setTimeout(() => {
-                    confirmationCard.classList.remove('scale-95', 'opacity-0');
-                    confirmationCard.classList.add('scale-100', 'opacity-100');
-                }, 100);
-
-                let countdown = 5;
-                const countdownElement = document.getElementById('countdown');
-                const interval = setInterval(() => {
-                    countdown--;
-                    countdownElement.textContent = countdown;
-                    if (countdown === 0) {
-                        clearInterval(interval);
-                        location.reload(); 
-                    }
-                }, 1000);
-            }
-
-            // --- EVENT LISTENERS ---
-            reunionForm.addEventListener('change', updateSummary);
-            document.getElementById('travelMode').addEventListener('change', handleTravelModeChange);
-
-            reunionForm.addEventListener('click', (e) => {
-                const target = e.target;
-                if (target.matches('button[data-action]')) {
-                    const id = target.dataset.id;
-                    const type = target.dataset.type;
-                    const action = target.dataset.action;
-                    
-                    const excursion = excursions.find(ex => ex.id === id);
-                    if (excursion) {
-                        const countKey = type === 'adult' ? 'adultCount' : 'childCount';
-                        if (action === 'increment') {
-                            excursion[countKey] = (excursion[countKey] || 0) + 1;
-                        } else if (action === 'decrement' && (excursion[countKey] || 0) > 0) {
-                            excursion[countKey]--;
-                        }
-                        document.getElementById(`${id}-${type}-count`).textContent = excursion[countKey];
-                        updateSummary();
-                    }
-                }
-            });
-
-            reunionForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const formData = new FormData();
-                const formElements = reunionForm.elements;
-
-                // Collect selected meals
-                const selectedMeals = Array.from(document.querySelectorAll('input[name="meal"]:checked')).map(cb => cb.value);
-                
-                // Collect selected excursions
-                const selectedExcursions = excursions
-                    .filter(ex => (ex.adultCount || 0) > 0 || (ex.childCount || 0) > 0)
-                    .map(ex => `${ex.name} (Adults: ${ex.adultCount || 0}, Children: ${ex.childCount || 0})`);
-                
-                // Collect interest-only items
-                const interestItems = Array.from(document.querySelectorAll('input[name="interest"]:checked')).map(cb => cb.value);
-
-                // Populate form data for submission
-                formData.append(googleFormEntryIds.familyName, formElements.familyName.value);
-                formData.append(googleFormEntryIds.attendees, formElements.attendees.value);
-                const lodgingDetail = `${formElements.lodgingCost.options[formElements.lodgingCost.selectedIndex].text} (Extra Bed: ${formElements.extraBed.checked ? 'Yes' : 'No'})`;
-                formData.append(googleFormEntryIds.lodging, lodgingDetail);
-                const travelDetail = `Mode: ${formElements.travelMode.value}, Origin: ${formElements.travelOrigin.value}, Airport: ${formElements.arrivalAirport.value}`;
-                formData.append(googleFormEntryIds.travelInfo, travelDetail);
-                formData.append(googleFormEntryIds.travelers, `Adults: ${formElements.adultTravelers.value}, Children: ${formElements.childTravelers.value}`);
-                formData.append(googleFormEntryIds.selectedMeals, selectedMeals.join(', ') || 'None');
-                formData.append(googleFormEntryIds.selectedExcursions, selectedExcursions.join('; ') || 'None');
-                formData.append(googleFormEntryIds.interestItems, interestItems.join(', ') || 'None');
-                formData.append(googleFormEntryIds.totalCost, document.getElementById('summary-total').textContent);
-                
-                try {
-                    // This fetch call is a placeholder. It will not work without a valid Google Form URL.
-                    // To make it work, create a Google Form and replace the placeholder URL and entry IDs.
-                    const response = await fetch(googleFormUrl, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: formData
-                    });
-                    
-                    showConfirmationPage();
-                    reunionForm.reset();
-                    renderContent(); // Re-render to reset counts to 0
-                    updateSummary();
-
-                } catch (error) {
-                    console.error('Submission error:', error);
-                    alert('There was an error submitting your form. Please check the console and ensure your Google Form URL is correct.');
-                }
-            });
-
-            // --- INITIALIZATION ---
-            renderMeals();
-            renderContent();
-            updateSummary();
-            handleTravelModeChange();
-        });
-    </script>
-</body>
-</html>
+                                ${isPriced ? `
+                                    <div class="mt-4 space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <span class="font-medium">Adults</span>
+                                            <div class="flex items-center space-x-2">
+                                                <button type="button" data-id="${excursion.id}" data-type="adult" data-action="decrement" class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-400">-</button>
+                                                <span id="${excursion.id}-adult-count" class="font-bold text-lg w-6 text-center">${excursion.adultCount || 0}</span>
+                                                <button type="button" data
